@@ -6,7 +6,6 @@ from easypie.constants import *
 
 import threading
 import traceback
-import time
 import sys
 
 from easypie import abstract
@@ -124,9 +123,15 @@ def print_exception_to_console():
     gui.core.main_window.centralWidget().stage.console.error_signal.emit(file.read())
 
 
+def console_print(*args,sep=' ',end='\n'):
+    string = sep.join([str(arg) for arg in args])+end
+    gui.core.main_window.centralWidget().stage.console.log_signal.emit(string)
+
 def execute(code):
     try:
-        exec(code, globals().copy())  # Copying globals to run in current namespace but don't change anything.
+        user_globals = globals().copy()
+        user_globals["print"] = console_print
+        exec(code, user_globals)  # Copying globals to run in current namespace but don't change anything.
     except Exception as e:
         game_thread.stop()
         print_exception_to_console()
