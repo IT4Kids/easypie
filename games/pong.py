@@ -118,12 +118,12 @@ def game_loop():
     # Print the score
     scoreprint = "Player 1: " + str(p1_score)
     text = font.render(scoreprint, 1, (255, 255, 255))
-    textpos = (0, 0)
+    textpos = (25, 0)
     screen.blit(text, textpos)
 
     scoreprint = "Player 2: " + str(p2_score)
     text = font.render(scoreprint, 1, (255, 255, 255))
-    textpos = (1475, 0)
+    textpos = (1450, 0)
     screen.blit(text, textpos)
 
     if game.sprite.spritecollide(p1, balls, False):
