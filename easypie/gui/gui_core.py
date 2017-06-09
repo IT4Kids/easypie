@@ -173,6 +173,13 @@ class MainWindow(QtWidgets.QMainWindow):
     def closeEvent(self, event):
         bindings._game_thread.stop()
 
+    def keyPressEvent(self, event):
+        key = event.key()
+        if key == Qt.Key_F5:
+            easypie.signals.all.game_start_signal.emit(self.centralWidget().editor.toPlainText())
+        elif key == Qt.Key_F6:
+            easypie.signals.all.game_stop_signal.emit()
+
 
 def init(screen):
     global main_window, app
