@@ -5,9 +5,10 @@ import PyQt5.QtCore as QtCore
 import pygame
 from PyQt5.QtCore import Qt
 
+import easypie
 import gui.editor
-import game
 import gui.debug_console
+import easypie.user_bindings as game
 
 main_window = None
 app = None
@@ -50,29 +51,34 @@ class CanvasWidget(QtWidgets.QFrame):
         self.buffer.fill((0,0,0))
         self.enable_painting = False
 
+    def qt_to_sdl_press(self, key_code):
+        return key_code+32
+
     def keyPressEvent(self, event):
         super().keyPressEvent(event)
 
-        modifiers = QtGui.QGuiApplication.keyboardModifiers()
-        print("KeyEvent: ",event.key(),event.text())
+        modifiers = int(QtGui.QGuiApplication.keyboardModifiers())
+        print("KeyPressEvent:", event.key(), event.text())
         if event.key() == Qt.Key_Escape:
             self.toggle_fullscreen(False)
             self.clearFocus()
 
         elif event.key() == Qt.Key_F10:
             self.toggle_fullscreen()
+
         else:
+            key = self.qt_to_sdl_press(event.key())
             if event.isAutoRepeat():
-                if event.text().lower() not in game.pressed_keys:
-                    game.pressed_keys.append(event.text().lower())
+                if key not in game.pressed_keys:
+                    game.pressed_keys.append(key)
             else:
-                method = game.KEYDOWN
-                game.key_queue.append((method, event.text(), modifiers))
-                game.pressed_keys.append(event.text().lower())#TODO remove loweer and add mods
+                method = easypie.KEYDOWN
+                game.key_queue.append((method, key, modifiers))
+                game.pressed_keys.append(key)
 
     def keyReleaseEvent(self, event):
-            if event.text() in game.pressed_keys:
-                game.pressed_keys.remove(event.text())
+            if self.qt_to_sdl_press(event.key()) in game.pressed_keys:
+                game.pressed_keys.remove(self.qt_to_sdl_press(event.key()))
 
     def focusInEvent(self, event):
         super().focusInEvent(event)
@@ -111,14 +117,14 @@ class StageWidget(QtWidgets.QWidget):
         self.console.clear()
         self.console.write("Starting program.")
         self.canvas.play()
-        game.execute(code)
+        game._execute(code)
 
     def stop(self):
-        game.game_thread.stop()
+        game._game_thread.stop()
         self.canvas.stop()
 
     def pause(self):
-        game.game_thread.paused = not game.game_thread.paused
+        game._game_thread.paused = not game._game_thread.paused
 
 
 class MainWidget(QtWidgets.QWidget):
@@ -170,7 +176,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.centralWidget().stage.canvas.update()
 
     def closeEvent(self, event):
-        game.game_thread.stop()
+        game._game_thread.stop()
 
 
 def init(screen):
