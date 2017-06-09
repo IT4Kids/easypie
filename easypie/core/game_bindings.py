@@ -10,6 +10,7 @@ import time
 import easypie
 import easypie.core.constants as constants
 import easypie.gui.gui_core
+import easypie.signals
 
 class GameThread(threading.Thread):
     def __init__(self, loop=None):
@@ -34,7 +35,6 @@ class GameThread(threading.Thread):
         clock = pygame.time.Clock()
         key_queue = []
         while not self.stop_flag_set:
-
             while self.pause_flag_set:
                 time.sleep(0.1)
 
@@ -56,10 +56,12 @@ class GameThread(threading.Thread):
 
             except Exception as e:
                 _print_exception_to_console()
+                easypie.signals.all.game_stop_signal.emit()
                 self.stop()
 
     def stop(self):
         self.stop_flag_set = True
+
 _game_thread = GameThread()
 
 
@@ -143,8 +145,10 @@ def _execute(code):
     try:
         exec(code, _setup_environment())  # Copying globals to run in current namespace but don't change anything.
     except Exception as e:
-        _game_thread.stop()
+        easypie.signals.all.game_stop_signal.emit()
         _print_exception_to_console()
 
+easypie.signals.all.game_start_signal.connect(_execute)
+easypie.signals.all.game_stop_signal.connect(_game_thread.stop)
 import easypie.core.pygame_extended
 sys.modules['pygame'] = sys.modules['easypie.core.pygame_extended']

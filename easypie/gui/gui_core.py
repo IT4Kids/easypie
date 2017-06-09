@@ -5,6 +5,7 @@ import PyQt5.QtCore as QtCore
 import pygame
 from PyQt5.QtCore import Qt
 
+import easypie.signals
 import easypie.gui.editor
 import easypie.gui.debug_console
 import easypie.core.game_bindings as bindings
@@ -12,6 +13,8 @@ import easypie.core.constants as constants
 main_window = None
 app = None
 
+def get_window():
+    return main_window
 
 class CanvasWidget(QtWidgets.QFrame):
     def __init__(self, pygame_surface, parent=None):
@@ -24,8 +27,9 @@ class CanvasWidget(QtWidgets.QFrame):
         self.setMinimumSize(self.w, self.h)
         self.setFocusPolicy(Qt.ClickFocus)
         self.setCursor(QtCore.Qt.PointingHandCursor)
-        self.enable_painting = False
         self.stop()
+        easypie.signals.all.game_start_signal.connect(self.play)
+        easypie.signals.all.game_stop_signal.connect(self.stop)
 
     def toggle_fullscreen(self,state=None):
         state = state if state else self.isWindow()
@@ -37,7 +41,7 @@ class CanvasWidget(QtWidgets.QFrame):
             self.setWindowFlags(Qt.Window)
             self.showFullScreen()
 
-    def play(self):
+    def play(self,code):
         self.enable_painting = True
         self.setStyleSheet("background-color: rgb(0,0,0); border: 5px solid #38b259;")
 
@@ -137,16 +141,6 @@ class MainWidget(QtWidgets.QWidget):
         self.layout().addWidget(self.stage, 50)
         self.layout().addWidget(self.editor, 50)
 
-    def play(self):
-        self.stage.play(self.editor.toPlainText())
-
-    def stop(self):
-        self.stage.stop()
-
-    def pause(self):
-        self.stage.pause()
-
-
 class PlaceHolderWidget(QtWidgets.QTextEdit):
     def __init__(self, size=None, parent=None):
         super().__init__(parent)
@@ -161,10 +155,12 @@ class MainWindow(QtWidgets.QMainWindow):
         self.setCentralWidget(MainWidget(pygame_canvas))
         self.setMinimumSize(1024, 768)
 
+
         toolbar = QtWidgets.QToolBar()
         toolbar.setIconSize(QtCore.QSize(40, 40))
-        toolbar.addAction(QtGui.QIcon('./easypie/gui/res/play.png'), "play", self.centralWidget().play)
-        toolbar.addAction(QtGui.QIcon('./easypie/gui/res/stop.png'), "stop", self.centralWidget().stop)
+        toolbar.addAction(QtGui.QIcon('./easypie/gui/res/play.png'), "play",
+                          lambda: easypie.signals.all.game_start_signal.emit(self.centralWidget().editor.toPlainText()))
+        toolbar.addAction(QtGui.QIcon('./easypie/gui/res/stop.png'), "stop", easypie.signals.all.game_stop_signal.emit)
         #toolbar.addAction(QtGui.QIcon('./res/pause.jpg'), "pause", self.centralWidget().pause)
         self.addToolBar(toolbar)
         self.toolBar = toolbar
