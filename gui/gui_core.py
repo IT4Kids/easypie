@@ -163,10 +163,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.setMinimumSize(1024, 768)
 
         toolbar = QtWidgets.QToolBar()
-        toolbar.setIconSize(QtCore.QSize(60, 60))
-        toolbar.addAction(QtGui.QIcon('./res/play.jpeg'), "play", self.centralWidget().play)
+        toolbar.setIconSize(QtCore.QSize(40, 40))
+        toolbar.addAction(QtGui.QIcon('./res/play.png'), "play", self.centralWidget().play)
         toolbar.addAction(QtGui.QIcon('./res/stop.png'), "stop", self.centralWidget().stop)
-        toolbar.addAction(QtGui.QIcon('./res/pause.jpg'), "pause", self.centralWidget().pause)
+        #toolbar.addAction(QtGui.QIcon('./res/pause.jpg'), "pause", self.centralWidget().pause)
         self.addToolBar(toolbar)
         self.toolBar = toolbar
 
