@@ -157,6 +157,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
         toolbar = QtWidgets.QToolBar()
+
         toolbar.setIconSize(QtCore.QSize(40, 40))
         toolbar.addAction(QtGui.QIcon('./easypie/gui/res/play.png'), "play",
                           lambda: easypie.signals.all.game_start_signal.emit(self.centralWidget().editor.toPlainText()))
@@ -164,7 +165,7 @@ class MainWindow(QtWidgets.QMainWindow):
         #toolbar.addAction(QtGui.QIcon('./res/pause.jpg'), "pause", self.centralWidget().pause)
         self.addToolBar(toolbar)
         self.toolBar = toolbar
-
+        self.setStyleSheet("QMainWindow {background: #dfdfdf;}")
         self.show()
 
     def loop(self):
