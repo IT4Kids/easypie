@@ -5,11 +5,10 @@ import PyQt5.QtCore as QtCore
 import pygame
 from PyQt5.QtCore import Qt
 
-import easypie
-import gui.editor
-import gui.debug_console
-import easypie.user_bindings as game
-
+import easypie.gui.editor
+import easypie.gui.debug_console
+import easypie.core.game_bindings as bindings
+import easypie.core.constants as constants
 main_window = None
 app = None
 
@@ -40,14 +39,14 @@ class CanvasWidget(QtWidgets.QFrame):
 
     def play(self):
         self.enable_painting = True
-        self.setStyleSheet("background-color: rgb(0,0,0); border: 5px solid green;")
+        self.setStyleSheet("background-color: rgb(0,0,0); border: 5px solid #38b259;")
 
     def closeEvent(self, event):
         self.toggle_fullscreen()
         event.ignore()
 
     def stop(self):
-        self.setStyleSheet("background-color: rgb(0,0,0); border: 5px solid red;")
+        self.setStyleSheet("background-color: rgb(0,0,0); border: 5px solid #c43c27;")
         self.buffer.fill((0,0,0))
         self.enable_painting = False
 
@@ -69,16 +68,16 @@ class CanvasWidget(QtWidgets.QFrame):
         else:
             key = self.qt_to_sdl_press(event.key())
             if event.isAutoRepeat():
-                if key not in game.pressed_keys:
-                    game.pressed_keys.append(key)
+                if key not in bindings.pressed_keys:
+                    bindings.pressed_keys.append(key)
             else:
-                method = easypie.KEYDOWN
-                game.key_queue.append((method, key, modifiers))
-                game.pressed_keys.append(key)
+                method = constants.KEYDOWN
+                bindings.key_queue.append((method, key, modifiers))
+                bindings.pressed_keys.append(key)
 
     def keyReleaseEvent(self, event):
-            if self.qt_to_sdl_press(event.key()) in game.pressed_keys:
-                game.pressed_keys.remove(self.qt_to_sdl_press(event.key()))
+            if self.qt_to_sdl_press(event.key()) in bindings.pressed_keys:
+                bindings.pressed_keys.remove(self.qt_to_sdl_press(event.key()))
 
     def focusInEvent(self, event):
         super().focusInEvent(event)
@@ -110,21 +109,21 @@ class StageWidget(QtWidgets.QWidget):
         self.canvas = CanvasWidget(pygame_canvas)
         self.layout().addWidget(self.canvas, 50)
 
-        self.console = gui.debug_console.QDbgConsole((100, 100))
+        self.console = easypie.gui.debug_console.QDbgConsole((100, 100))
         self.layout().addWidget(self.console, 50)
 
     def play(self, code):
         self.console.clear()
         self.console.write("Starting program.")
         self.canvas.play()
-        game._execute(code)
+        bindings._execute(code)
 
     def stop(self):
-        game._game_thread.stop()
+        bindings._game_thread.stop()
         self.canvas.stop()
 
     def pause(self):
-        game._game_thread.paused = not game._game_thread.paused
+        bindings._game_thread.paused = not bindings._game_thread.paused
 
 
 class MainWidget(QtWidgets.QWidget):
@@ -133,7 +132,7 @@ class MainWidget(QtWidgets.QWidget):
 
         self.setLayout(QtWidgets.QHBoxLayout())
         self.stage = StageWidget(pygame_canvas)
-        self.editor = gui.editor.Editor()
+        self.editor = easypie.gui.editor.Editor()
 
         self.layout().addWidget(self.stage, 50)
         self.layout().addWidget(self.editor, 50)
@@ -164,8 +163,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
         toolbar = QtWidgets.QToolBar()
         toolbar.setIconSize(QtCore.QSize(40, 40))
-        toolbar.addAction(QtGui.QIcon('./res/play.png'), "play", self.centralWidget().play)
-        toolbar.addAction(QtGui.QIcon('./res/stop.png'), "stop", self.centralWidget().stop)
+        toolbar.addAction(QtGui.QIcon('./easypie/gui/res/play.png'), "play", self.centralWidget().play)
+        toolbar.addAction(QtGui.QIcon('./easypie/gui/res/stop.png'), "stop", self.centralWidget().stop)
         #toolbar.addAction(QtGui.QIcon('./res/pause.jpg'), "pause", self.centralWidget().pause)
         self.addToolBar(toolbar)
         self.toolBar = toolbar
@@ -176,7 +175,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.centralWidget().stage.canvas.update()
 
     def closeEvent(self, event):
-        game._game_thread.stop()
+        bindings._game_thread.stop()
 
 
 def init(screen):

@@ -8,8 +8,8 @@ import pygame
 import time
 
 import easypie
-import easypie.constants as constants
-import gui.gui_core
+import easypie.core.constants as constants
+import easypie.gui.gui_core
 
 class GameThread(threading.Thread):
     def __init__(self, loop=None):
@@ -38,20 +38,20 @@ class GameThread(threading.Thread):
             while self.pause_flag_set:
                 time.sleep(0.1)
 
-            clock.tick(easypie.constants.MAX_FPS)  # Enforce fpsmax
+            clock.tick(easypie.core.constants.MAX_FPS)  # Enforce fpsmax
             try:
                 for (method, keycode, modifiers) in key_queue:
-                    cbs = key_callbacks[easypie.constants.KEYDOWN].get(keycode, {}).get(modifiers, [])
+                    cbs = key_callbacks[easypie.core.constants.KEYDOWN].get(keycode, {}).get(modifiers, [])
                     for cb in cbs:
                         cb()
                 key_queue = []
 
                 for keycode in pressed_keys:
-                    cbs = key_callbacks[easypie.constants.KEYPRESSED].get(keycode, {}).get(modifiers, [])
+                    cbs = key_callbacks[easypie.core.constants.KEYPRESSED].get(keycode, {}).get(modifiers, [])
                     for cb in cbs:
                         cb()
 
-                gui.gui_core.loop()
+                easypie.gui.gui_core.loop()
                 self.user_loop()
 
             except Exception as e:
@@ -129,14 +129,14 @@ def _setup_environment():
 
 def _console_print(*args, sep=' ', end='\n'):
     string = sep.join([str(arg) for arg in args]) + end
-    gui.gui_core.main_window.centralWidget().stage.console.log_signal.emit(string)
+    easypie.gui.gui_core.main_window.centralWidget().stage.console.log_signal.emit(string)
 
 def _print_exception_to_console():
     file = io.StringIO()
     t, v, tb = sys.exc_info()
     traceback.print_exception(t, v, tb.tb_next, file=file)
     file.seek(0)
-    gui.gui_core.main_window.centralWidget().stage.console.error_signal.emit(file.read())
+    easypie.gui.gui_core.main_window.centralWidget().stage.console.error_signal.emit(file.read())
 
 
 def _execute(code):
@@ -146,4 +146,5 @@ def _execute(code):
         _game_thread.stop()
         _print_exception_to_console()
 
-sys.modules['game'] = sys.modules['easypie']
+import easypie.core.pygame_extended
+sys.modules['pygame'] = sys.modules['easypie.core.pygame_extended']
