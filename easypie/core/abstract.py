@@ -1,7 +1,7 @@
 # coding=utf-8
 import pygame
 
-class GameElement(pygame.sprite.Sprite):  # TODO Create game element bindings
+class GameElement(pygame.sprite.Sprite):
 
     def __init__(self):
         super(GameElement, self).__init__()
@@ -9,9 +9,9 @@ class GameElement(pygame.sprite.Sprite):  # TODO Create game element bindings
         pass
 
     def move(self):
-        pass #todo fix gameloop animations with yield
+        pass
 
-class Animation():#todo create maus zum käse
+class Animation():
 
     def __init__(self):
         self.key_frames = []
