@@ -16,9 +16,10 @@ app = None
 def get_window():
     return main_window
 
-class CanvasWidget(QtWidgets.QFrame):
+class QCanvas(QtWidgets.QFrame):
     def __init__(self, pygame_surface, parent=None):
-        super(CanvasWidget, self).__init__(parent)
+        super(QCanvas, self).__init__(parent)
+
         self.buffer = pygame_surface
         self.screen = self.buffer
         self.border_size = 5
@@ -27,7 +28,8 @@ class CanvasWidget(QtWidgets.QFrame):
         self.setMinimumSize(self.w, self.h)
         self.setFocusPolicy(Qt.ClickFocus)
         self.setCursor(QtCore.Qt.PointingHandCursor)
-        self.stop()
+        self.painting_enabled = False
+
         easypie.signals.all.game_start_signal.connect(self.play)
         easypie.signals.all.game_stop_signal.connect(self.stop)
 
@@ -42,7 +44,7 @@ class CanvasWidget(QtWidgets.QFrame):
             self.showFullScreen()
 
     def play(self,code):
-        self.enable_painting = True
+        self.painting_enabled = True
         self.setStyleSheet("background-color: rgb(0,0,0); border: 5px solid #38b259;")
 
     def closeEvent(self, event):
@@ -52,7 +54,7 @@ class CanvasWidget(QtWidgets.QFrame):
     def stop(self):
         self.setStyleSheet("background-color: rgb(0,0,0); border: 5px solid #c43c27;")
         self.buffer.fill((0,0,0))
-        self.enable_painting = False
+        self.painting_enabled = False
 
     def qt_to_sdl_press(self, key_code):
         return key_code+32
@@ -92,7 +94,7 @@ class CanvasWidget(QtWidgets.QFrame):
         self.setCursor(QtCore.Qt.PointingHandCursor)
 
     def paintEvent(self, event):
-        if self.enable_painting:
+        if self.painting_enabled:
             scaled_buffer = pygame.transform.scale(self.buffer.copy(), (self.w, self.h))
             image = QtGui.QImage(scaled_buffer.get_buffer().raw, self.w, self.h, QtGui.QImage.Format_RGB32)
             self.painter.begin(self)
@@ -104,13 +106,13 @@ class CanvasWidget(QtWidgets.QFrame):
         self.w, self.h = self.width()-self.border_size*2, self.height()-self.border_size*2
 
 
-class StageWidget(QtWidgets.QWidget):
+class QStage(QtWidgets.QWidget):
     def __init__(self, pygame_canvas, parent=None):
         super().__init__(parent)
         self.setLayout(QtWidgets.QVBoxLayout(self))
         self.layout().setSpacing(5)
         self.layout().setContentsMargins(0, 0, 0, 0)
-        self.canvas = CanvasWidget(pygame_canvas)
+        self.canvas = QCanvas(pygame_canvas)
         self.layout().addWidget(self.canvas, 50)
 
         self.console = easypie.gui.debug_console.QDbgConsole((100, 100))
@@ -135,7 +137,7 @@ class MainWidget(QtWidgets.QWidget):
         super(MainWidget, self).__init__(parent)
 
         self.setLayout(QtWidgets.QHBoxLayout())
-        self.stage = StageWidget(pygame_canvas)
+        self.stage = QStage(pygame_canvas)
         self.editor = easypie.gui.editor.Editor()
 
         self.layout().addWidget(self.stage, 50)
@@ -165,7 +167,7 @@ class MainWindow(QtWidgets.QMainWindow):
         #toolbar.addAction(QtGui.QIcon('./res/pause.jpg'), "pause", self.centralWidget().pause)
         self.addToolBar(toolbar)
         self.toolBar = toolbar
-        self.setStyleSheet("QMainWindow {background: #dfdfdf;}")
+        self.setStyleSheet(open("./easypie/gui/style.css").read())
         self.show()
 
     def loop(self):

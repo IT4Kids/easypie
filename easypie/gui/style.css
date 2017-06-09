@@ -1,0 +1,11 @@
+QMainWindow {
+    background: #dfdfdf;
+}
+QDbgConsole {
+    background: rgb(244,244,250);
+}
+
+QCanvas {
+    background-color: rgb(0,0,0);
+    border: 5px solid #c43c27;
+}

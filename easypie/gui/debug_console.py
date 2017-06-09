@@ -24,9 +24,6 @@ class QDbgConsole(QtWidgets.QTextEdit):
         self.log_signal.connect(self.write)
         self.error_signal.connect(lambda msg: self.write(msg, text_color=QtGui.QColor(139, 0, 0)))
 
-        palette = self.palette()
-        palette.setColor(QtGui.QPalette.Base, QtGui.QColor(240,240,255))
-        self.setPalette(palette)
 
     def write(self, msg, text_color=QtGui.QColor(0, 0, 0)):
         """Add msg to the console's output, on a new line."""
