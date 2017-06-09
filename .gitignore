@@ -1,1 +1,4 @@
 # Created by .ignore support plugin (hsz.mobi)
+/todo.py
+.idea/workspace.xml
+__pycache__/
