@@ -29,14 +29,20 @@ class QCanvas(QtWidgets.QFrame):
         self.setFocusPolicy(Qt.ClickFocus)
         self.setCursor(QtCore.Qt.PointingHandCursor)
         self.painting_enabled = False
+        self.backdrop_image = None
 
         easypie.signals.all.game_start_signal.connect(self.play)
         easypie.signals.all.game_stop_signal.connect(self.stop)
 
-        self.test_action = QtWidgets.QAction("Fullscreen")
-        self.test_action.triggered.connect(lambda:print("Test"))
-        self.test_action.setShortcut("f7")
-        self.addAction(self.test_action)
+        self.toggle_fs_action = QtWidgets.QAction("Fullscreen")
+        self.toggle_fs_action.triggered.connect(self.toggle_fullscreen)
+        self.toggle_fs_action.setShortcut("f10")
+        self.addAction(self.toggle_fs_action)
+
+        self.exit_focus_action = QtWidgets.QAction("Exit Focus")
+        self.exit_focus_action.triggered.connect(lambda: self.toggle_fullscreen(True))
+        self.exit_focus_action.setShortcut("esc")
+        self.addAction(self.exit_focus_action)
 
     def toggle_fullscreen(self,state=None):
         state = state if state else self.isWindow()
@@ -92,11 +98,12 @@ class QCanvas(QtWidgets.QFrame):
 
     def paintEvent(self, event):
         if self.painting_enabled:
+            self.painter.begin(self)
             scaled_buffer = pygame.transform.scale(self.buffer.copy(), (self.w, self.h))
             image = QtGui.QImage(scaled_buffer.get_buffer().raw, self.w, self.h, QtGui.QImage.Format_RGB32)
-            self.painter.begin(self)
             self.painter.drawImage(self.border_size, self.border_size, image)
             self.painter.end()
+
 
     def resizeEvent(self, event):
         super().resizeEvent(event)
@@ -193,7 +200,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def load_project(self):
         file_path = QtWidgets.QFileDialog.getOpenFileName(self,"Open Project",".","Python (*.py)")
-        self.centralWidget().editor.file.open(file_path[0])
+        if file_path[0]:
+            self.centralWidget().editor.file.open(file_path[0])
 
 def init(screen):
     global main_window, app

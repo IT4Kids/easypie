@@ -5,7 +5,7 @@ from pygame import *
 import pygame
 import PyQt5.QtCore as Core
 from easypie.core.abstract import GameElement
-from easypie.core.game_bindings import on_key, screen, run
+from easypie.core.game_bindings import on_key, screen, run, set_background
 init()
 font.Font(None,36)
 

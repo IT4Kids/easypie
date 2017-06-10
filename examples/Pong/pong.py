@@ -3,7 +3,7 @@ import math
 import random
 import pygame
 
-
+pygame.set_background("/home/axxessio/workspace/Work/IT4Kids/easypie/examples/MausZumKaese/maus_zum_kaese.bmp")
 class Ball(pygame.GameElement):
     # Constructor. Pass in the color of the block, and its x and y position
     def __init__(self):
@@ -112,7 +112,6 @@ pygame.on_key(pygame.K_l, lambda: p2.move(-10), method=pygame.KEYPRESSED)
 def game_loop():
     global p1_score, p2_score
 
-    screen.fill((0, 0, 0))
 
     # Print the score
     scoreprint = "Player 1: " + str(p1_score)
@@ -145,11 +144,11 @@ def game_loop():
         ball.bounce(diff)
 
         # Do we bounce off the vertical side of the screen?
-    if ball.x <= p1.rect.x:
+    if ball.x <= 0:
         ball.reset()
         p2_score += 1
 
-    if ball.x > p2.rect.x + p2.width:
+    if ball.x > pygame.WIDTH:
         ball.reset()
         p1_score += 1
 

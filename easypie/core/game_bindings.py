@@ -31,7 +31,7 @@ class GameThread(threading.Thread):
         self.pause_flag_set = value
 
     def run(self):
-        global key_queue, key_callbacks, pressed_keys
+        global key_queue, key_callbacks, pressed_keys, screen
         clock = pygame.time.Clock()
         key_queue = []
         while not self.stop_flag_set:
@@ -51,8 +51,10 @@ class GameThread(threading.Thread):
                     for cb in cbs:
                         cb()
 
-                easypie.gui.gui_core.loop()
+                screen.fill((0, 0, 0))
+                screen.blit(background_image,(0,0))
                 self.user_loop()
+                easypie.gui.gui_core.loop()
 
             except Exception as e:
                 _print_exception_to_console()
@@ -113,8 +115,6 @@ def run(loop):
     _game_thread.start()
 
 
-
-
 def _setup_environment():
     global key_callbacks, key_queue, pressed_keys
 
@@ -128,10 +128,20 @@ def _setup_environment():
     user_glob["print"] = _console_print
     return user_glob
 
+def set_background(file_path=None):
+    global background_image
+    if not file_path.endswith(".bmp"):
+        _console_err("Warning: Loading background: You should always use .bmp-formatted images.")
+    background_image = pygame.image.load(file_path)
+    background_image = pygame.transform.scale(background_image,constants.SCREEN_SIZE)
 
 def _console_print(*args, sep=' ', end='\n'):
     string = sep.join([str(arg) for arg in args]) + end
     easypie.gui.gui_core.main_window.centralWidget().stage.console.log_signal.emit(string)
+
+def _console_err(*args, sep=' ', end='\n'):
+    string = sep.join([str(arg) for arg in args]) + end
+    easypie.gui.gui_core.main_window.centralWidget().stage.console.error_signal.emit(string)
 
 def _print_exception_to_console():
     file = io.StringIO()
