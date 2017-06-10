@@ -4,5 +4,5 @@ import easypie.core.game_bindings as game
 
 RUN_INTEGRATED = True
 gui.init(game.screen)
-gui.main_window.centralWidget().editor.file.open('./examples/Pong/pong.py')
+gui.main_window.centralWidget().editor.file.open('./examples/MausZumKaese/maus_zum_kaese.py')
 gui.app.exec_()
