@@ -176,7 +176,7 @@ class MainWindow(QtWidgets.QMainWindow):
         #Setup Menubar
         menubar = self.menuBar()
         filemenu = menubar.addMenu("&Project")
-        open_action = QtWidgets.QAction("&Test",self)
+        open_action = QtWidgets.QAction("&Open",self)
         open_action.setShortcut("CTRL+O")
         open_action.triggered.connect(self.load_project)
         filemenu.addAction(open_action)
