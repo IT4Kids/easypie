@@ -150,15 +150,16 @@ class PlaceHolderWidget(QtWidgets.QTextEdit):
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self, pygame_canvas, parent=None):
         super(MainWindow, self).__init__(parent)
-
+        #General Setup
         self.setCentralWidget(MainWidget(pygame_canvas))
         self.setMinimumSize(1024, 768)
         self.setWindowIcon(QtGui.QIcon("./easypie/gui/res/icon.png"))
         self.setWindowTitle("It 4 Kids: EasyPie")
+        self.setStyleSheet(open("./easypie/gui/style.css").read()) #Todo make configurable
 
+        #Setup Toolbar
         toolbar = QtWidgets.QToolBar()
         toolbar.setIconSize(QtCore.QSize(40, 40))
-
         toolbar.addAction(QtGui.QIcon('./easypie/gui/res/play.png'),
                                         "Play (F5)",
                                         lambda: easypie.signals.all.game_start_signal.emit(
@@ -169,15 +170,19 @@ class MainWindow(QtWidgets.QMainWindow):
                                         "Stop (F6)",
                                         easypie.signals.all.game_stop_signal.emit)\
                                         .setShortcut("f6")
-
         self.toolBar = toolbar
         self.addToolBar(self.toolBar)
 
+        #Setup Menubar
         menubar = self.menuBar()
         filemenu = menubar.addMenu("&Project")
+        open_action = QtWidgets.QAction("&Test",self)
+        open_action.setShortcut("CTRL+O")
+        open_action.triggered.connect(self.load_project)
+        filemenu.addAction(open_action)
+        self.addAction(open_action)
 
 
-        self.setStyleSheet(open("./easypie/gui/style.css").read())
         self.show()
 
     def loop(self):
@@ -186,6 +191,9 @@ class MainWindow(QtWidgets.QMainWindow):
     def closeEvent(self, event):
         bindings._game_thread.stop()
 
+    def load_project(self):
+        file_path = QtWidgets.QFileDialog.getOpenFileName(self,"Open Project",".","Python (*.py)")
+        self.centralWidget().editor.file.open(file_path[0])
 
 def init(screen):
     global main_window, app
