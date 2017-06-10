@@ -33,6 +33,11 @@ class QCanvas(QtWidgets.QFrame):
         easypie.signals.all.game_start_signal.connect(self.play)
         easypie.signals.all.game_stop_signal.connect(self.stop)
 
+        self.test_action = QtWidgets.QAction("Fullscreen")
+        self.test_action.triggered.connect(lambda:print("Test"))
+        self.test_action.setShortcut("f7")
+        self.addAction(self.test_action)
+
     def toggle_fullscreen(self,state=None):
         state = state if state else self.isWindow()
         if state:
@@ -64,22 +69,14 @@ class QCanvas(QtWidgets.QFrame):
 
         modifiers = int(QtGui.QGuiApplication.keyboardModifiers())
         print("KeyPressEvent:", event.key(), event.text())
-        if event.key() == Qt.Key_Escape:
-            self.toggle_fullscreen(False)
-            self.clearFocus()
-
-        elif event.key() == Qt.Key_F10:
-            self.toggle_fullscreen()
-
-        else:
-            key = self.qt_to_sdl_press(event.key())
-            if event.isAutoRepeat():
-                if key not in bindings.pressed_keys:
-                    bindings.pressed_keys.append(key)
-            else:
-                method = constants.KEYDOWN
-                bindings.key_queue.append((method, key, modifiers))
+        key = self.qt_to_sdl_press(event.key())
+        if event.isAutoRepeat():
+            if key not in bindings.pressed_keys:
                 bindings.pressed_keys.append(key)
+        else:
+            method = constants.KEYDOWN
+            bindings.key_queue.append((method, key, modifiers))
+            bindings.pressed_keys.append(key)
 
     def keyReleaseEvent(self, event):
             if self.qt_to_sdl_press(event.key()) in bindings.pressed_keys:
@@ -156,17 +153,30 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.setCentralWidget(MainWidget(pygame_canvas))
         self.setMinimumSize(1024, 768)
-
+        self.setWindowIcon(QtGui.QIcon("./easypie/gui/res/icon.png"))
+        self.setWindowTitle("It 4 Kids: EasyPie")
 
         toolbar = QtWidgets.QToolBar()
-
         toolbar.setIconSize(QtCore.QSize(40, 40))
-        toolbar.addAction(QtGui.QIcon('./easypie/gui/res/play.png'), "play",
-                          lambda: easypie.signals.all.game_start_signal.emit(self.centralWidget().editor.toPlainText()))
-        toolbar.addAction(QtGui.QIcon('./easypie/gui/res/stop.png'), "stop", easypie.signals.all.game_stop_signal.emit)
-        #toolbar.addAction(QtGui.QIcon('./res/pause.jpg'), "pause", self.centralWidget().pause)
-        self.addToolBar(toolbar)
+
+        toolbar.addAction(QtGui.QIcon('./easypie/gui/res/play.png'),
+                                        "Play (F5)",
+                                        lambda: easypie.signals.all.game_start_signal.emit(
+                                            self.centralWidget().editor.toPlainText()))\
+                                        .setShortcut("f5")
+
+        toolbar.addAction(QtGui.QIcon('./easypie/gui/res/stop.png'),
+                                        "Stop (F6)",
+                                        easypie.signals.all.game_stop_signal.emit)\
+                                        .setShortcut("f6")
+
         self.toolBar = toolbar
+        self.addToolBar(self.toolBar)
+
+        menubar = self.menuBar()
+        filemenu = menubar.addMenu("&Project")
+
+
         self.setStyleSheet(open("./easypie/gui/style.css").read())
         self.show()
 
@@ -176,17 +186,13 @@ class MainWindow(QtWidgets.QMainWindow):
     def closeEvent(self, event):
         bindings._game_thread.stop()
 
-    def keyPressEvent(self, event):
-        key = event.key()
-        if key == Qt.Key_F5:
-            easypie.signals.all.game_start_signal.emit(self.centralWidget().editor.toPlainText())
-        elif key == Qt.Key_F6:
-            easypie.signals.all.game_stop_signal.emit()
-
 
 def init(screen):
     global main_window, app
     app = QtWidgets.QApplication([])
+    app.setApplicationName("Easypie")
+    app.setOrganizationName("IT 4 Kids")
+    app.setOrganizationDomain("it-for-kids.org")
     main_window = MainWindow(screen)
 
 
