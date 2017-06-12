@@ -5,11 +5,8 @@ class GameElement(pygame.sprite.Sprite):
 
     def __init__(self):
         super(GameElement, self).__init__()
-        self.x = 300
-        pass
+        self.costume = None
 
-    def move(self):
-        pass
 
 class Animation():
 
