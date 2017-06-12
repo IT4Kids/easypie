@@ -31,7 +31,7 @@ class GameThread(threading.Thread):
         self.pause_flag_set = value
 
     def run(self):
-        global key_queue, key_callbacks, pressed_keys, screen
+        global key_queue, key_callbacks, pressed_keys, screen, background_image
         clock = pygame.time.Clock()
         key_queue = []
         while not self.stop_flag_set:
@@ -52,7 +52,8 @@ class GameThread(threading.Thread):
                         cb()
 
                 screen.fill((0, 0, 0))
-                screen.blit(background_image,(0,0))
+                if background_image:
+                    screen.blit(background_image,(0,0))
                 self.user_loop()
                 easypie.gui.gui_core.loop()
 
@@ -66,7 +67,7 @@ class GameThread(threading.Thread):
 
 _game_thread = GameThread()
 
-
+background_image = None
 screen = pygame.Surface(constants.SCREEN_SIZE)
 key_callbacks = {
     constants.KEYDOWN: {},  # for oneShot keys
@@ -153,10 +154,12 @@ def _print_exception_to_console():
 
 def _execute(code):
     try:
+        _console_print("Starting program.\n")
         exec(code, _setup_environment())  # Copying globals to run in current namespace but don't change anything.
-    except Exception as e:
-        easypie.signals.all.game_stop_signal.emit()
+    except Exception:
         _print_exception_to_console()
+    finally:
+        easypie.signals.all.game_stop_signal.emit()
 
 easypie.signals.all.game_start_signal.connect(_execute)
 easypie.signals.all.game_stop_signal.connect(_game_thread.stop)
