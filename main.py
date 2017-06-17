@@ -1,8 +1,8 @@
 # coding=utf-8
 import pygame
 
-import easypie.core.game_bindings as game
 import easypie.gui.gui_core as gui
+import easypie.core.game_bindings as game
 
 pygame.init()
 gui.init(game.screen)
