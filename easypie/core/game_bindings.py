@@ -31,6 +31,7 @@ class GameThread(threading.Thread):
         self.pause_flag_set = value
 
     def run(self):
+        self.is_running = True
         global key_queue, key_callbacks, pressed_keys, screen, background_image
         clock = pygame.time.Clock()
         key_queue = []
@@ -61,6 +62,7 @@ class GameThread(threading.Thread):
                 _print_exception_to_console()
                 easypie.signals.all.game_stop_signal.emit()
                 self.stop()
+        self.is_running = False
 
     def stop(self):
         self.stop_flag_set = True
