@@ -3,8 +3,7 @@ import math
 import random
 import pygame
 
-pygame.set_background("/home/axxessio/workspace/Work/IT4Kids/easypie/examples/MausZumKaese/maus_zum_kaese.bmp")
-class Ball(pygame.GameElement):
+class Ball(pygame.sprite.Sprite):
     # Constructor. Pass in the color of the block, and its x and y position
     def __init__(self):
         # Call the parent class (Sprite) constructor
@@ -65,7 +64,7 @@ class Ball(pygame.GameElement):
         self.rect.y = self.y
 
 
-class Player(pygame.GameElement):
+class Player(pygame.sprite.Sprite):
     # Constructor function
     def __init__(self, x_pos):
         # Call the parent's constructor
@@ -105,7 +104,7 @@ moving_sprites.add(p1)
 moving_sprites.add(p2)
 pygame.on_key(pygame.K_a, lambda: p1.move(10), method=pygame.KEYPRESSED)
 pygame.on_key(pygame.K_d, lambda: p1.move(-10), method=pygame.KEYPRESSED)
-pygame.on_key(pygame.K_j, lambda: p2.move(10), method=pygame.KEYPRESSED)#todo support all keys, not only letters and numbers
+pygame.on_key(pygame.K_j, lambda: p2.move(10), method=pygame.KEYPRESSED)
 pygame.on_key(pygame.K_l, lambda: p2.move(-10), method=pygame.KEYPRESSED)
 
 
