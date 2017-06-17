@@ -1,15 +1,12 @@
 # coding=utf-8
 import io
-import threading
+import sys
 import traceback
 
-import pygame
-import sys
-
-import easypie.signals
+import commons
 import easypie.gui.gui_core
+import easypie.signals
 from easypie.core import constants
-
 
 environment = None
 def _user_print(*args, sep=' ', end='\n'):
@@ -26,7 +23,7 @@ def reset_env():
     environment = {}
     environment['print'] = _user_print
     environment['bg_image'] = None
-    screen = pygame.Surface(constants.SCREEN_SIZE)
+    commons.screen.fill((0,0,0))
     key_callbacks = {
         constants.KEYDOWN: {},  # for oneShot keys
         constants.KEYPRESSED: {}  # for pressed keys,
