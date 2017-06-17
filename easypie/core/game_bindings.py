@@ -62,6 +62,7 @@ class GameThread(threading.Thread):
                 _print_exception_to_console()
                 easypie.signals.all.game_stop_signal.emit()
                 self.stop()
+
         self.is_running = False
 
     def stop(self):
@@ -119,7 +120,9 @@ def run(loop):
 
 
 def _setup_environment():
-    global key_callbacks, key_queue, pressed_keys
+    global key_callbacks, key_queue, pressed_keys, background_image
+
+    background_image = None
 
     key_callbacks = {
         constants.KEYDOWN: {},  # for oneShot keys
