@@ -200,7 +200,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.centralWidget().stage.canvas.update()
 
     def closeEvent(self, event):
-        bindings._game_thread.stop()
+        pass
 
     def load_project(self):
         file_path = QtWidgets.QFileDialog.getOpenFileName(self,"Open Project",".","Python (*.py)")
