@@ -1,8 +1,11 @@
 # coding=utf-8
-import easypie.gui.gui_core as gui
-import easypie.core.game_bindings as game
+import pygame
 
-RUN_INTEGRATED = True
+import easypie.core.game_bindings as game
+import easypie.gui.gui_core as gui
+
+pygame.init()
 gui.init(game.screen)
-gui.main_window.centralWidget().editor.file.open('./examples/MausZumKaese/maus_zum_kaese.py')
-gui.app.exec_()
+gui.main_window.centralWidget().editor.file.open('/home/axxessio/workspace/Work/IT4Kids/easypie/examples/MausZumKaese/vorlage.py')
+ret = gui.app.exec_()
+pygame.quit()
