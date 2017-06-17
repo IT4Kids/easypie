@@ -161,22 +161,26 @@ class MainWindow(QtWidgets.QMainWindow):
         self.setCentralWidget(MainWidget(pygame_canvas))
         self.setMinimumSize(1024, 768)
         self.setWindowIcon(QtGui.QIcon("./easypie/gui/res/icon.png"))
-        self.setWindowTitle("It 4 Kids: EasyPie")
+        self.setWindowTitle("It4Kids: EasyPie")
         self.setStyleSheet(open("./easypie/gui/style.css").read()) #Todo make configurable
 
         #Setup Toolbar
         toolbar = QtWidgets.QToolBar()
         toolbar.setIconSize(QtCore.QSize(40, 40))
-        toolbar.addAction(QtGui.QIcon('./easypie/gui/res/play.png'),
+
+        play_action = toolbar.addAction(QtGui.QIcon('./easypie/gui/res/play.png'),
                                         "Play (F5)",
                                         lambda: easypie.signals.all.game_start_signal.emit(
-                                            self.centralWidget().editor.toPlainText()))\
-                                        .setShortcut("f5")
+                                            self.centralWidget().editor.toPlainText()))
+        play_action.setShortcut("f5")
+        play_action.setShortcutContext(Qt.ApplicationShortcut)
 
-        toolbar.addAction(QtGui.QIcon('./easypie/gui/res/stop.png'),
+        stop_action = toolbar.addAction(QtGui.QIcon('./easypie/gui/res/stop.png'),
                                         "Stop (F6)",
-                                        easypie.signals.all.game_stop_signal.emit)\
-                                        .setShortcut("f6")
+                                        lambda: easypie.signals.all.game_stop_signal.emit())
+        stop_action.setShortcut("f6")
+        stop_action.setShortcutContext(Qt.ApplicationShortcut)
+
         self.toolBar = toolbar
         self.addToolBar(self.toolBar)
 
@@ -207,7 +211,7 @@ def init(screen):
     global main_window, app
     app = QtWidgets.QApplication([])
     app.setApplicationName("Easypie")
-    app.setOrganizationName("IT 4 Kids")
+    app.setOrganizationName("IT4Kids")
     app.setOrganizationDomain("it-for-kids.org")
     main_window = MainWindow(screen)
 
