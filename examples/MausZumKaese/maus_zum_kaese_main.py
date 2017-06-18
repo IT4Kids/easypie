@@ -6,7 +6,6 @@ import time
 import pygame
 
 
-pygame.set_background("./examples/MausZumKaese/background.bmp")
 
 
 class Kaese(pygame.sprite.Sprite):
@@ -45,17 +44,17 @@ class Maus(pygame.sprite.Sprite):
 
         # Change the position (x and y) according to the speed and direction
         self.rect.x += steps * math.sin(direction_radians)
-        self.rect.y -= steps * math.cos(direction_radians)
+        self.rect.y += steps * math.cos(direction_radians)
 
     def turn(self, rad=15):
+        self.direction += rad
         loc = self.rect.center
-        self.direction -= rad
-        self.image = pygame.transform.rotate(self.image,rad)
+        self.image = pygame.transform.rotate(self.original_image,self.direction-90)
         self.rect = self.image.get_rect(center=loc)
 
     def reset(self):
-        self.image = pygame.image.load("./examples/MausZumKaese/Maus.bmp")
-        self.image = pygame.transform.scale2x(self.image)
+        self.original_image = pygame.transform.scale2x(pygame.image.load("./examples/MausZumKaese/Maus.bmp"))
+        self.image = self.original_image.copy()
         self.rect = self.image.get_rect()
         self.rect.x, self.rect.y = 50,700
         self.direction = 90
@@ -94,9 +93,11 @@ sprites.add(Kaese())
 sprites.add(maus)
 
 def game_loop(anim):
+
     anim.update()
     sprites.draw(pygame.screen)
 
 def run(anim):
+    pygame.set_background("./examples/MausZumKaese/background.bmp")
     maus.reset()
     pygame.run(lambda: game_loop(anim))

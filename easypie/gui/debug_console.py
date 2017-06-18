@@ -4,6 +4,8 @@ import PyQt5.QtGui as QtGui
 import io
 from pyqode.qt import QtCore
 
+from easypie import signals
+
 
 class QDbgConsole(QtWidgets.QTextEdit):
     """
@@ -24,7 +26,6 @@ class QDbgConsole(QtWidgets.QTextEdit):
         self.log_signal.connect(self.write)
         self.error_signal.connect(lambda msg: self.write(msg, text_color=QtGui.QColor(139, 0, 0)))
 
-
     def write(self, msg, text_color=QtGui.QColor(0, 0, 0)):
         """Add msg to the console's output, on a new line."""
         self.setTextColor(text_color)
@@ -33,8 +34,7 @@ class QDbgConsole(QtWidgets.QTextEdit):
         self.moveCursor(QtGui.QTextCursor.End)
         self._buffer.write(msg)
 
-    def clear(self):
-        self.setText("")
+
 
     def __getattr__(self, attr):
         """

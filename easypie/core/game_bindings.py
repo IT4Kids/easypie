@@ -18,6 +18,7 @@ class GameThread(threading.Thread):
         self.user_loop = loop
         self.stop_flag_set = False
         self.pause_flag_set = False
+        self.is_running = False
 
     def set_loop(self, loop):
         self.user_loop = loop
@@ -59,6 +60,8 @@ class GameThread(threading.Thread):
                 easypie.gui.gui_core.loop()
 
             except Exception as e:
+                traceback.print_exc()
+                print("Exception in GameThread",e)
                 _print_exception_to_console()
                 easypie.signals.all.game_stop_signal.emit()
                 self.stop()
@@ -149,6 +152,10 @@ def _console_err(*args, sep=' ', end='\n'):
     string = sep.join([str(arg) for arg in args]) + end
     easypie.gui.gui_core.main_window.centralWidget().stage.console.error_signal.emit(string)
 
+def _console_clear():
+    easypie.gui.gui_core.main_window.centralWidget().stage.console.clear()#Change this to a signal later one, fix bug
+                                                                            # with signal in incorrect order
+
 def _print_exception_to_console():
     file = io.StringIO()
     t, v, tb = sys.exc_info()
@@ -158,8 +165,12 @@ def _print_exception_to_console():
 
 
 def _execute(code):
+    if _game_thread.is_running:
+        _game_thread.stop()
+        _game_thread.join()
     try:
-        _console_print("Starting program.\n")
+        _console_clear()
+        _console_print(">>> Starting program.")
         exec(code, _setup_environment())  # Copying globals to run in current namespace but don't change anything.
     except Exception:
         _print_exception_to_console()

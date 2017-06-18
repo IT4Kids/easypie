@@ -54,7 +54,7 @@ class QCanvas(QtWidgets.QFrame):
             self.setWindowFlags(Qt.Window)
             self.showFullScreen()
 
-    def play(self,code):
+    def play(self):
         self.painting_enabled = True
         self.setStyleSheet("background-color: rgb(0,0,0); border: 5px solid #38b259;")
 
@@ -121,16 +121,6 @@ class QStage(QtWidgets.QWidget):
 
         self.console = easypie.gui.debug_console.QDbgConsole((100, 100))
         self.layout().addWidget(self.console, 50)
-
-    def play(self, code):
-        self.console.clear()
-        self.console.write("Starting program.")
-        self.canvas.play()
-        bindings._execute(code)
-
-    def stop(self):
-        bindings._game_thread.stop()
-        self.canvas.stop()
 
     def pause(self):
         bindings._game_thread.paused = not bindings._game_thread.paused
