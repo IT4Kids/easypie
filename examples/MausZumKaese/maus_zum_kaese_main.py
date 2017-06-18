@@ -88,16 +88,63 @@ class Animation:
                 self.waittime = func_tuple[1]
             self.last_time = time.time()
 
-sprites = pygame.sprite.Group()
-sprites.add(Kaese())
-sprites.add(maus)
+class WaterCollider(pygame.sprite.Sprite):
+
+    def __init__(self,x,y,width,height,groups):
+        super().__init__(groups)
+        self.image = pygame.Surface((width,height))
+        self.image.fill((0,0,255))
+        self.image.set_alpha(0)
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+
+watercolliders = pygame.sprite.Group()
+WaterCollider(0,0,100,500,watercolliders)
+WaterCollider(0,0,1000,80,watercolliders)
+WaterCollider(620,370,1000,600,watercolliders)
+maus_group = pygame.sprite.Group()
+maus_group.add(maus)
+
+k = Kaese()
+kaese_group = pygame.sprite.Group()
+kaese_group.add(k)
 
 def game_loop(anim):
+    global won,lost
 
-    anim.update()
-    sprites.draw(pygame.screen)
+    if not won and not lost:
+        anim.update()
+        maus_group.draw(pygame.screen)
+        kaese_group.draw(pygame.screen)
+        watercolliders.draw(pygame.screen)
+        if pygame.sprite.spritecollide(maus, watercolliders, False):
+            lost = True
+        if pygame.sprite.spritecollide(maus,kaese_group, False):
+            won = True
+
+    if won:
+        maus.rect.x = pygame.WIDTH / 2 - maus.rect.width/2
+        maus.rect.y = pygame.HEIGHT / 2 - 200
+        font = pygame.font.Font(None, 300)
+        text = font.render("Gewonnen!", True, (255, 255, 255))
+        pygame.screen.blit(text, (200, 400))
+        maus_group.draw(pygame.screen)
+        pygame.set_background()
+
+
+    if lost:
+        maus.rect.x = pygame.WIDTH / 2 - maus.rect.width/2
+        maus.rect.y = pygame.HEIGHT / 2 - 200
+        font = pygame.font.Font(None, 300)
+        text = font.render("Verloren!", True, (255, 0, 0))
+        pygame.screen.blit(text, (250, 400))
+        maus_group.draw(pygame.screen)
+        pygame.set_background()
 
 def run(anim):
+    global  won,lost
     pygame.set_background("./examples/MausZumKaese/background.bmp")
     maus.reset()
+    won, lost = False, False
     pygame.run(lambda: game_loop(anim))
