@@ -139,10 +139,13 @@ def _setup_environment():
 
 def set_background(file_path=None):
     global background_image
-    if not file_path.endswith(".bmp"):
-        _console_err("Warning: Loading background: You should always use .bmp-formatted images.")
-    background_image = pygame.image.load(file_path)
-    background_image = pygame.transform.scale(background_image,constants.SCREEN_SIZE)
+    if file_path:
+        if not file_path.endswith(".bmp"):
+            _console_err("Warning: Loading background: You should always use .bmp-formatted images.")
+        background_image = pygame.image.load(file_path)
+        background_image = pygame.transform.scale(background_image,constants.SCREEN_SIZE)
+    else:
+        background_image = None
 
 def _console_print(*args, sep=' ', end='\n'):
     string = sep.join([str(arg) for arg in args]) + end
