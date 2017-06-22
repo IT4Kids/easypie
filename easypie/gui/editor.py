@@ -1,5 +1,5 @@
 # coding=utf-8
-from pyqode.python.modes import PEP8CheckerMode
+from pyqode.python.modes import PEP8CheckerMode, CalltipsMode
 from pyqode.python.panels import QuickDocPanel
 from pyqode.core.modes import CodeCompletionMode
 from pyqode.python.widgets import PyCodeEdit
@@ -11,5 +11,6 @@ class Editor(PyCodeEdit):
         super().__init__(color_scheme='monokai', autostart_backend=False)
         self.modes.remove(PEP8CheckerMode)
         self.modes.remove(CodeCompletionMode)
+        self.modes.remove(CalltipsMode)
         self.panels.remove(QuickDocPanel)
 
