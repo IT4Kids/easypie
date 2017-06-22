@@ -182,6 +182,10 @@ class MainWindow(QtWidgets.QMainWindow):
         open_action.setShortcut("CTRL+O")
         open_action.triggered.connect(self.load_project)
         filemenu.addAction(open_action)
+
+        filemenu.addSeparator()
+
+        filemenu.addAction("Quick-Access: Maus Zum Käse",lambda: self.centralWidget().editor.file.open("examples/MausZumKaese/vorlage.py"))
         self.addAction(open_action)
 
 
