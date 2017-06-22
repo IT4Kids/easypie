@@ -1,15 +1,16 @@
 # coding=utf-8
-import PyQt5.QtWidgets as QtWidgets
-import PyQt5.QtGui as QtGui
 import PyQt5.QtCore as QtCore
+import PyQt5.QtGui as QtGui
+import PyQt5.QtWidgets as QtWidgets
 import pygame
 from PyQt5.QtCore import Qt
 
-import easypie.signals
-import easypie.gui.editor
-import easypie.gui.debug_console
-import easypie.core.game_bindings as bindings
 import easypie.core.constants as constants
+import easypie.core.game_bindings as bindings
+import easypie.gui.debug_console
+import easypie.gui.editor
+import easypie.signals
+
 main_window = None
 app = None
 
@@ -128,7 +129,7 @@ class QStage(QtWidgets.QWidget):
 
 class MainWidget(QtWidgets.QWidget):
     def __init__(self, pygame_canvas, parent=None):
-        super(MainWidget, self).__init__(parent)
+        super().__init__(parent)
 
         self.setLayout(QtWidgets.QHBoxLayout())
         self.stage = QStage(pygame_canvas)
