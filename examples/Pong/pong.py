@@ -90,7 +90,7 @@ class Player(pygame.sprite.Sprite):
 p1_score = 0
 p2_score = 0
 screen = pygame.screen
-font = pygame.font.Font(None, 36)
+font = pygame.font.Font("src/gui/res/freesansbold.ttf", 36)
 ball = Ball()
 p1 = Player(50)
 p2 = Player(pygame.WIDTH - 65)
@@ -120,7 +120,7 @@ def game_loop():
 
     scoreprint = "Player 2: " + str(p2_score)
     text = font.render(scoreprint, 1, (255, 255, 255))
-    textpos = (1450, 0)
+    textpos = (1400, 0)
     screen.blit(text, textpos)
 
     if pygame.sprite.spritecollide(p1, balls, False):
