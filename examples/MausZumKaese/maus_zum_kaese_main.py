@@ -110,9 +110,9 @@ k = Kaese()
 kaese_group = pygame.sprite.Group()
 kaese_group.add(k)
 
+font = pygame.font.Font("src/gui/res/freesansbold.ttf", 220)
 def game_loop(anim):
     global won,lost
-
     if not won and not lost:
         anim.update()
         maus_group.draw(pygame.screen)
@@ -126,7 +126,6 @@ def game_loop(anim):
     if won:
         maus.rect.x = pygame.WIDTH / 2 - maus.rect.width/2
         maus.rect.y = pygame.HEIGHT / 2 - 200
-        font = pygame.font.Font(None, 300)
         text = font.render("Gewonnen!", True, (255, 255, 255))
         pygame.screen.blit(text, (200, 400))
         maus_group.draw(pygame.screen)
@@ -136,7 +135,6 @@ def game_loop(anim):
     if lost:
         maus.rect.x = pygame.WIDTH / 2 - maus.rect.width/2
         maus.rect.y = pygame.HEIGHT / 2 - 200
-        font = pygame.font.Font(None, 300)
         text = font.render("Verloren!", True, (255, 0, 0))
         pygame.screen.blit(text, (250, 400))
         maus_group.draw(pygame.screen)
