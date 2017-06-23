@@ -4,7 +4,7 @@ import PyQt5.QtGui as QtGui
 import io
 from pyqode.qt import QtCore
 
-from easypie import signals
+from src import signals
 
 
 class QDbgConsole(QtWidgets.QTextEdit):

@@ -5,11 +5,11 @@ import PyQt5.QtWidgets as QtWidgets
 import pygame
 from PyQt5.QtCore import Qt
 
-import easypie.core.constants as constants
-import easypie.core.game_bindings as bindings
-import easypie.gui.debug_console
-import easypie.gui.editor
-import easypie.signals
+import src.core.constants as constants
+import src.core.game_bindings as bindings
+import src.gui.debug_console
+import src.gui.editor
+import src.signals
 
 main_window = None
 app = None
@@ -32,8 +32,8 @@ class QCanvas(QtWidgets.QFrame):
         self.painting_enabled = False
         self.backdrop_image = None
 
-        easypie.signals.all.game_start_signal.connect(self.play)
-        easypie.signals.all.game_stop_signal.connect(self.stop)
+        src.signals.all.game_start_signal.connect(self.play)
+        src.signals.all.game_stop_signal.connect(self.stop)
 
         self.toggle_fs_action = QtWidgets.QAction("Fullscreen")
         self.toggle_fs_action.triggered.connect(self.toggle_fullscreen)
@@ -120,7 +120,7 @@ class QStage(QtWidgets.QWidget):
         self.canvas = QCanvas(pygame_canvas)
         self.layout().addWidget(self.canvas, 50)
 
-        self.console = easypie.gui.debug_console.QDbgConsole((100, 100))
+        self.console = src.gui.debug_console.QDbgConsole((100, 100))
         self.layout().addWidget(self.console, 50)
 
     def pause(self):
@@ -133,7 +133,7 @@ class MainWidget(QtWidgets.QWidget):
 
         self.setLayout(QtWidgets.QHBoxLayout())
         self.stage = QStage(pygame_canvas)
-        self.editor = easypie.gui.editor.Editor()
+        self.editor = src.gui.editor.Editor()
 
         self.layout().addWidget(self.stage, 50)
         self.layout().addWidget(self.editor, 50)
@@ -151,24 +151,24 @@ class MainWindow(QtWidgets.QMainWindow):
         #General Setup
         self.setCentralWidget(MainWidget(pygame_canvas))
         self.setMinimumSize(1024, 768)
-        self.setWindowIcon(QtGui.QIcon("./easypie/gui/res/icon.png"))
+        self.setWindowIcon(QtGui.QIcon("./src/gui/res/icon.png"))
         self.setWindowTitle("It4Kids: EasyPie")
-        self.setStyleSheet(open("./easypie/gui/style.css").read()) #Todo make configurable
+        self.setStyleSheet(open("./src/gui/style.css").read()) #Todo make configurable
 
         #Setup Toolbar
         toolbar = QtWidgets.QToolBar()
         toolbar.setIconSize(QtCore.QSize(40, 40))
 
-        play_action = toolbar.addAction(QtGui.QIcon('./easypie/gui/res/play.png'),
+        play_action = toolbar.addAction(QtGui.QIcon('./src/gui/res/play.png'),
                                         "Play (F5)",
-                                        lambda: easypie.signals.all.game_start_signal.emit(
+                                        lambda: src.signals.all.game_start_signal.emit(
                                             self.centralWidget().editor.toPlainText()))
         play_action.setShortcut("f5")
         play_action.setShortcutContext(Qt.ApplicationShortcut)
 
-        stop_action = toolbar.addAction(QtGui.QIcon('./easypie/gui/res/stop.png'),
+        stop_action = toolbar.addAction(QtGui.QIcon('./src/gui/res/stop.png'),
                                         "Stop (F6)",
-                                        lambda: easypie.signals.all.game_stop_signal.emit())
+                                        lambda: src.signals.all.game_stop_signal.emit())
         stop_action.setShortcut("f6")
         stop_action.setShortcutContext(Qt.ApplicationShortcut)
 
