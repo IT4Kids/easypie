@@ -177,7 +177,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         #Setup Menubar
         menubar = self.menuBar()
-        filemenu = menubar.addMenu("&Project")
+        filemenu = menubar.addMenu("&Project") #type: QtWidgets.QMenu
         open_action = QtWidgets.QAction("&Open",self)
         open_action.setShortcut("CTRL+O")
         open_action.triggered.connect(self.load_project)
@@ -185,7 +185,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
         filemenu.addSeparator()
 
-        filemenu.addAction("Quick-Access: Maus Zum Käse",lambda: self.centralWidget().tabbed_editors.file.open("examples/MausZumKaese/vorlage.py"))
+        examples_menu = filemenu.addMenu("Examples")
+        examples_menu.addAction("Maus Zum Käse",lambda: self.centralWidget().tabbed_editors.current_widget().file.open("examples/MausZumKaese/vorlage.py"))
         self.addAction(open_action)
 
 
