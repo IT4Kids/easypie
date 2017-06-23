@@ -133,10 +133,10 @@ class MainWidget(QtWidgets.QWidget):
 
         self.setLayout(QtWidgets.QHBoxLayout())
         self.stage = QStage(pygame_canvas)
-        self.editor = src.gui.editor.Editor()
+        self.tabbed_editors = src.gui.editor.Editor()
 
         self.layout().addWidget(self.stage, 50)
-        self.layout().addWidget(self.editor, 50)
+        self.layout().addWidget(self.tabbed_editors, 50)
 
 class PlaceHolderWidget(QtWidgets.QTextEdit):
     def __init__(self, size=None, parent=None):
@@ -162,7 +162,7 @@ class MainWindow(QtWidgets.QMainWindow):
         play_action = toolbar.addAction(QtGui.QIcon('./src/gui/res/play.png'),
                                         "Play (F5)",
                                         lambda: src.signals.all.game_start_signal.emit(
-                                            self.centralWidget().editor.toPlainText()))
+                                            self.centralWidget().tabbed_editors.current_widget().toPlainText()))
         play_action.setShortcut("f5")
         play_action.setShortcutContext(Qt.ApplicationShortcut)
 
@@ -185,7 +185,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         filemenu.addSeparator()
 
-        filemenu.addAction("Quick-Access: Maus Zum Käse",lambda: self.centralWidget().editor.file.open("examples/MausZumKaese/vorlage.py"))
+        filemenu.addAction("Quick-Access: Maus Zum Käse",lambda: self.centralWidget().tabbed_editors.file.open("examples/MausZumKaese/vorlage.py"))
         self.addAction(open_action)
 
 
