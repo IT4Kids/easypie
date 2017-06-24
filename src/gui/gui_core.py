@@ -133,7 +133,7 @@ class MainWidget(QtWidgets.QWidget):
 
         self.setLayout(QtWidgets.QHBoxLayout())
         self.stage = QStage(pygame_canvas)
-        self.tabbed_editors = src.gui.editor.Editor()
+        self.tabbed_editors = src.gui.editor.Editor(self)
 
         self.layout().addWidget(self.stage, 50)
         self.layout().addWidget(self.tabbed_editors, 50)
@@ -149,7 +149,7 @@ class MainWindow(QtWidgets.QMainWindow):
     def __init__(self, pygame_canvas, parent=None):
         super(MainWindow, self).__init__(parent)
         #General Setup
-        self.setCentralWidget(MainWidget(pygame_canvas))
+        self.setCentralWidget(MainWidget(pygame_canvas,parent=self))
         self.setMinimumSize(1024, 768)
         self.setWindowIcon(QtGui.QIcon("./src/gui/res/icon.png"))
         self.setWindowTitle("It4Kids: EasyPie")
@@ -177,11 +177,20 @@ class MainWindow(QtWidgets.QMainWindow):
 
         #Setup Menubar
         menubar = self.menuBar()
-        filemenu = menubar.addMenu("&Project") #type: QtWidgets.QMenu
-        open_action = QtWidgets.QAction("&Open",self)
+        filemenu = menubar.addMenu("&File") #type: QtWidgets.QMenu
+        open_action = QtWidgets.QAction("&Open...",self)
         open_action.setShortcut("CTRL+O")
         open_action.triggered.connect(self.load_project)
         filemenu.addAction(open_action)
+
+        save_action = QtWidgets.QAction("&Save...", self)
+        save_action.setShortcut("CTRL+S")
+        save_action.triggered.connect(src.signals.all.save_signal.emit)
+        filemenu.addAction(save_action)
+
+        save_as_action = QtWidgets.QAction("&Save as...", self)
+        save_as_action.triggered.connect(src.signals.all.save_as_signal.emit)
+        filemenu.addAction(save_as_action)
 
         filemenu.addSeparator()
 
@@ -196,12 +205,14 @@ class MainWindow(QtWidgets.QMainWindow):
         self.centralWidget().stage.canvas.update()
 
     def closeEvent(self, event):
+        src.signals.all.close_signal.emit()
+        self.centralWidget().tabbed_editors.closeEvent(event)
         bindings._game_thread.stop()
 
     def load_project(self):
         file_path = QtWidgets.QFileDialog.getOpenFileName(self,"Open Project",".","Python (*.py)")
         if file_path[0]:
-            self.centralWidget().editor.file.open(file_path[0])
+            self.centralWidget().tabbed_editors.open_document(file_path[0])
 
 def init(screen):
     global main_window, app
