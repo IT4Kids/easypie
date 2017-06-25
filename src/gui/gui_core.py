@@ -198,8 +198,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.addAction(save_action)
 
         save_as_action = QtWidgets.QAction("&Save as...", self)
+        save_as_action.setShortcuts(QtGui.QKeySequence.SaveAs)
         save_as_action.triggered.connect(signals.all.save_as_signal.emit)
         filemenu.addAction(save_as_action)
+        self.addAction(save_as_action)
 
         filemenu.addSeparator()
 
