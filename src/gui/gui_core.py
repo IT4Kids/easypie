@@ -179,6 +179,12 @@ class MainWindow(QtWidgets.QMainWindow):
         menubar = self.menuBar()
         filemenu = menubar.addMenu("&File") #type: QtWidgets.QMenu
 
+        new_action = QtWidgets.QAction("&New...",self)
+        new_action.setShortcuts(QtGui.QKeySequence.New)
+        new_action.triggered.connect(src.signals.all.new_signal.emit)
+        filemenu.addAction(new_action)
+        self.addAction(new_action)
+
         open_action = QtWidgets.QAction("&Open...", self)
         open_action.setShortcuts(QtGui.QKeySequence.Open)
         open_action.triggered.connect(self.load_project)

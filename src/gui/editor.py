@@ -1,10 +1,12 @@
 # coding=utf-8
 import sys
+
 from pyqode.python.modes import PEP8CheckerMode, CalltipsMode
 from pyqode.python.panels import QuickDocPanel
 from pyqode.core.modes import CodeCompletionMode
 from pyqode.core.widgets import SplittableCodeEditTabWidget
 from pyqode.python.widgets import PyCodeEdit
+
 import src.signals
 
 class MyCodeEdit(PyCodeEdit):
@@ -27,6 +29,7 @@ class Editor(SplittableCodeEditTabWidget):
         self.register_code_edit(MyCodeEdit)
         src.signals.all.save_as_signal.connect(self.save_current_as)
         src.signals.all.save_signal.connect(self.save_current)
+        src.signals.all.new_signal.connect(self.create_new_document)
 
     def save_current(self):
         if self.current_widget():
