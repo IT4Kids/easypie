@@ -162,7 +162,7 @@ class MainWindow(QtWidgets.QMainWindow):
         play_action = toolbar.addAction(QtGui.QIcon('./src/gui/res/play.png'),
                                         "Play (F5)",
                                         lambda: src.signals.all.game_start_signal.emit(
-                                            self.centralWidget().tabbed_editors.current_widget().toPlainText()))
+                                            self.centralWidget().tabbed_editors.get_code()))
         play_action.setShortcut("f5")
         play_action.setShortcutContext(Qt.ApplicationShortcut)
 
@@ -178,15 +178,18 @@ class MainWindow(QtWidgets.QMainWindow):
         #Setup Menubar
         menubar = self.menuBar()
         filemenu = menubar.addMenu("&File") #type: QtWidgets.QMenu
-        open_action = QtWidgets.QAction("&Open...",self)
-        open_action.setShortcut("CTRL+O")
+
+        open_action = QtWidgets.QAction("&Open...", self)
+        open_action.setShortcuts(QtGui.QKeySequence.Open)
         open_action.triggered.connect(self.load_project)
         filemenu.addAction(open_action)
+        self.addAction(open_action)
 
         save_action = QtWidgets.QAction("&Save...", self)
-        save_action.setShortcut("CTRL+S")
+        save_action.setShortcuts(QtGui.QKeySequence.Save)
         save_action.triggered.connect(src.signals.all.save_signal.emit)
         filemenu.addAction(save_action)
+        self.addAction(save_action)
 
         save_as_action = QtWidgets.QAction("&Save as...", self)
         save_as_action.triggered.connect(src.signals.all.save_as_signal.emit)
@@ -196,7 +199,6 @@ class MainWindow(QtWidgets.QMainWindow):
 
         examples_menu = filemenu.addMenu("Examples")
         examples_menu.addAction("Maus Zum Käse",lambda: self.centralWidget().tabbed_editors.open_document("examples/MausZumKaese/maus_zum_kaese.py"))
-        self.addAction(open_action)
 
 
         self.show()
