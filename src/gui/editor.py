@@ -34,3 +34,8 @@ class Editor(SplittableCodeEditTabWidget):
                 self.save_current_as()
             else:
                 super().save_current()
+
+    def get_code(self):
+        if self.current_widget():
+            return self.current_widget().toPlainText()
+        return ""
