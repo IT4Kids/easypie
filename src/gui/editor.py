@@ -29,7 +29,7 @@ class Editor(SplittableCodeEditTabWidget):
         self.register_code_edit(MyCodeEdit)
         src.signals.all.save_as_signal.connect(self.save_current_as)
         src.signals.all.save_signal.connect(self.save_current)
-        src.signals.all.new_signal.connect(self.create_new_document)
+        src.signals.all.new_signal.connect(lambda: self.create_new_document(extension=".py"))
 
     def save_current(self):
         if self.current_widget():
