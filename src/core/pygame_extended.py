@@ -5,11 +5,11 @@ from pygame import *
 import pygame
 import PyQt5.QtCore as Core
 
-from src.core.abstract import GameElement
-from src.core.game_bindings import on_key, screen, run, set_background
+from core.abstract import GameElement
+from core.game_bindings import on_key, screen, run, set_background
 
 pygame.init()
-font.Font("src/gui/res/freesansbold.ttf",36)
+font.Font("gui/res/freesansbold.ttf",36)
 
 KMOD_ALT = Core.Qt.AltModifier
 KMOD_CTRL = Core.Qt.ControlModifier

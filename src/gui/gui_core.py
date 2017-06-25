@@ -5,11 +5,11 @@ import PyQt5.QtWidgets as QtWidgets
 import pygame
 from PyQt5.QtCore import Qt
 
-import src.core.constants as constants
-import src.core.game_bindings as bindings
-import src.gui.debug_console
-import src.gui.editor
-import src.signals
+import core.constants as constants
+import core.game_bindings as bindings
+import gui.debug_console
+import gui.editor
+import signals
 
 main_window = None
 app = None
@@ -32,8 +32,8 @@ class QCanvas(QtWidgets.QFrame):
         self.painting_enabled = False
         self.backdrop_image = None
 
-        src.signals.all.game_start_signal.connect(self.play)
-        src.signals.all.game_stop_signal.connect(self.stop)
+        signals.all.game_start_signal.connect(self.play)
+        signals.all.game_stop_signal.connect(self.stop)
 
         self.toggle_fs_action = QtWidgets.QAction("Fullscreen")
         self.toggle_fs_action.triggered.connect(self.toggle_fullscreen)
@@ -120,7 +120,7 @@ class QStage(QtWidgets.QWidget):
         self.canvas = QCanvas(pygame_canvas)
         self.layout().addWidget(self.canvas, 50)
 
-        self.console = src.gui.debug_console.QDbgConsole((100, 100))
+        self.console = gui.debug_console.QDbgConsole((100, 100))
         self.layout().addWidget(self.console, 50)
 
     def pause(self):
@@ -133,7 +133,7 @@ class MainWidget(QtWidgets.QWidget):
 
         self.setLayout(QtWidgets.QHBoxLayout())
         self.stage = QStage(pygame_canvas)
-        self.tabbed_editors = src.gui.editor.Editor(self)
+        self.tabbed_editors = gui.editor.Editor(self)
 
         self.layout().addWidget(self.stage, 50)
         self.layout().addWidget(self.tabbed_editors, 50)
@@ -153,7 +153,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.setMinimumSize(1024, 768)
         self.setWindowIcon(QtGui.QIcon("./src/gui/res/icon.png"))
         self.setWindowTitle("It4Kids: EasyPie")
-        self.setStyleSheet(open("./src/gui/style.css").read()) #Todo make configurable
+        self.setStyleSheet(open("gui/style.css").read()) #Todo make configurable
 
         #Setup Toolbar
         toolbar = QtWidgets.QToolBar()
@@ -161,14 +161,14 @@ class MainWindow(QtWidgets.QMainWindow):
 
         play_action = toolbar.addAction(QtGui.QIcon('./src/gui/res/play.png'),
                                         "Play (F5)",
-                                        lambda: src.signals.all.game_start_signal.emit(
+                                        lambda: signals.all.game_start_signal.emit(
                                             self.centralWidget().tabbed_editors.get_code()))
         play_action.setShortcut("f5")
         play_action.setShortcutContext(Qt.ApplicationShortcut)
 
         stop_action = toolbar.addAction(QtGui.QIcon('./src/gui/res/stop.png'),
                                         "Stop (F6)",
-                                        lambda: src.signals.all.game_stop_signal.emit())
+                                        lambda: signals.all.game_stop_signal.emit())
         stop_action.setShortcut("f6")
         stop_action.setShortcutContext(Qt.ApplicationShortcut)
 
@@ -181,7 +181,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         new_action = QtWidgets.QAction("&New...",self)
         new_action.setShortcuts(QtGui.QKeySequence.New)
-        new_action.triggered.connect(src.signals.all.new_signal.emit)
+        new_action.triggered.connect(signals.all.new_signal.emit)
         filemenu.addAction(new_action)
         self.addAction(new_action)
 
@@ -193,12 +193,12 @@ class MainWindow(QtWidgets.QMainWindow):
 
         save_action = QtWidgets.QAction("&Save...", self)
         save_action.setShortcuts(QtGui.QKeySequence.Save)
-        save_action.triggered.connect(src.signals.all.save_signal.emit)
+        save_action.triggered.connect(signals.all.save_signal.emit)
         filemenu.addAction(save_action)
         self.addAction(save_action)
 
         save_as_action = QtWidgets.QAction("&Save as...", self)
-        save_as_action.triggered.connect(src.signals.all.save_as_signal.emit)
+        save_as_action.triggered.connect(signals.all.save_as_signal.emit)
         filemenu.addAction(save_as_action)
 
         filemenu.addSeparator()
@@ -213,7 +213,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.centralWidget().stage.canvas.update()
 
     def closeEvent(self, event):
-        src.signals.all.close_signal.emit()
+        signals.all.close_signal.emit()
         self.centralWidget().tabbed_editors.closeEvent(event)
         bindings._game_thread.stop()
 

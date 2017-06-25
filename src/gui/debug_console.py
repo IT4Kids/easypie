@@ -4,9 +4,6 @@ import PyQt5.QtGui as QtGui
 import io
 from pyqode.qt import QtCore
 
-from src import signals
-
-
 class QDbgConsole(QtWidgets.QTextEdit):
     """
     A simple QTextEdit, with a few pre-set attributes and a file-like

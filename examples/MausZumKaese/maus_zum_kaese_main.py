@@ -37,7 +37,6 @@ class Maus(pygame.sprite.Sprite):
 
     def __init__(self):
         super().__init__()
-        self.reset()
 
     def move(self,steps=10):
         direction_radians = math.radians(self.direction)
@@ -110,7 +109,7 @@ k = Kaese()
 kaese_group = pygame.sprite.Group()
 kaese_group.add(k)
 
-font = pygame.font.Font("src/gui/res/freesansbold.ttf", 220)
+font = pygame.font.Font("gui/res/freesansbold.ttf", 220)
 def game_loop(anim):
     global won,lost
     if not won and not lost:

@@ -7,7 +7,7 @@ from pyqode.core.modes import CodeCompletionMode
 from pyqode.core.widgets import SplittableCodeEditTabWidget
 from pyqode.python.widgets import PyCodeEdit
 
-import src.signals
+import signals
 
 class MyCodeEdit(PyCodeEdit):
     # https://pythonhosted.org/pyqode.python/examples.html
@@ -27,9 +27,9 @@ class Editor(SplittableCodeEditTabWidget):
     def __init__(self,parent=None):
         super().__init__(parent)
         self.register_code_edit(MyCodeEdit)
-        src.signals.all.save_as_signal.connect(self.save_current_as)
-        src.signals.all.save_signal.connect(self.save_current)
-        src.signals.all.new_signal.connect(lambda: self.create_new_document(extension=".py"))
+        signals.all.save_as_signal.connect(self.save_current_as)
+        signals.all.save_signal.connect(self.save_current)
+        signals.all.new_signal.connect(lambda: self.create_new_document(extension=".py"))
 
     def save_current(self):
         if self.current_widget():

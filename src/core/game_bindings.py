@@ -7,10 +7,9 @@ import sys
 import pygame
 import time
 
-import src
-import src.core.constants as constants
-import src.gui.gui_core
-import src.signals
+import core.constants as constants
+import gui.gui_core
+import signals
 
 class GameThread(threading.Thread):
     def __init__(self, loop=None):
@@ -40,16 +39,16 @@ class GameThread(threading.Thread):
             while self.pause_flag_set:
                 time.sleep(0.1)
 
-            clock.tick(src.core.constants.MAX_FPS)  # Enforce fpsmax
+            clock.tick(core.constants.MAX_FPS)  # Enforce fpsmax
             try:
                 for (method, keycode, modifiers) in key_queue:
-                    cbs = key_callbacks[src.core.constants.KEYDOWN].get(keycode, {}).get(modifiers, [])
+                    cbs = key_callbacks[core.constants.KEYDOWN].get(keycode, {}).get(modifiers, [])
                     for cb in cbs:
                         cb()
                 key_queue = []
 
                 for keycode in pressed_keys:
-                    cbs = key_callbacks[src.core.constants.KEYPRESSED].get(keycode, {}).get(modifiers, [])
+                    cbs = key_callbacks[core.constants.KEYPRESSED].get(keycode, {}).get(modifiers, [])
                     for cb in cbs:
                         cb()
 
@@ -57,13 +56,13 @@ class GameThread(threading.Thread):
                 if background_image:
                     screen.blit(background_image,(0,0))
                 self.user_loop()
-                src.gui.gui_core.loop()
+                gui.gui_core.loop()
 
             except Exception as e:
                 traceback.print_exc()
                 print("Exception in GameThread",e)
                 _print_exception_to_console()
-                src.signals.all.game_stop_signal.emit()
+                signals.all.game_stop_signal.emit()
                 self.stop()
 
         self.is_running = False
@@ -149,14 +148,14 @@ def set_background(file_path=None):
 
 def _console_print(*args, sep=' ', end='\n'):
     string = sep.join([str(arg) for arg in args]) + end
-    src.gui.gui_core.main_window.centralWidget().stage.console.log_signal.emit(string)
+    gui.gui_core.main_window.centralWidget().stage.console.log_signal.emit(string)
 
 def _console_err(*args, sep=' ', end='\n'):
     string = sep.join([str(arg) for arg in args]) + end
-    src.gui.gui_core.main_window.centralWidget().stage.console.error_signal.emit(string)
+    gui.gui_core.main_window.centralWidget().stage.console.error_signal.emit(string)
 
 def _console_clear():
-    src.gui.gui_core.main_window.centralWidget().stage.console.clear()#Change this to a signal later one, fix bug
+    gui.gui_core.main_window.centralWidget().stage.console.clear()#Change this to a signal later one, fix bug
                                                                             # with signal in incorrect order
 
 def _print_exception_to_console():
@@ -164,7 +163,7 @@ def _print_exception_to_console():
     t, v, tb = sys.exc_info()
     traceback.print_exception(t, v, tb.tb_next, file=file)
     file.seek(0)
-    src.gui.gui_core.main_window.centralWidget().stage.console.error_signal.emit(file.read())
+    gui.gui_core.main_window.centralWidget().stage.console.error_signal.emit(file.read())
 
 
 def _execute(code):
@@ -178,9 +177,9 @@ def _execute(code):
     except Exception:
         _print_exception_to_console()
     finally:
-        src.signals.all.game_stop_signal.emit()
+        signals.all.game_stop_signal.emit()
 
-src.signals.all.game_start_signal.connect(_execute)
-src.signals.all.game_stop_signal.connect(_game_thread.stop)
-import src.core.pygame_extended
-sys.modules['pygame'] = sys.modules['src.core.pygame_extended']
+signals.all.game_start_signal.connect(_execute)
+signals.all.game_stop_signal.connect(_game_thread.stop)
+import core.pygame_extended
+sys.modules['pygame'] = sys.modules['core.pygame_extended']
