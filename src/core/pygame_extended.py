@@ -5,7 +5,6 @@ from pygame import *
 import pygame
 import PyQt5.QtCore as Core
 
-from core.abstract import GameElement
 from core.game_bindings import on_key, screen, run, set_background
 
 pygame.init()
