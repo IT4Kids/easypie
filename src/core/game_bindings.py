@@ -171,6 +171,7 @@ def _print_exception_to_console():
 
 
 def _execute(code):
+    old_path = os.getcwd()
     if _game_thread.is_running:
         _game_thread.stop()
         _game_thread.join()
@@ -181,6 +182,7 @@ def _execute(code):
     except Exception:
         _print_exception_to_console()
     finally:
+        os.chdir(old_path)
         signals.all.game_stop_signal.emit()
 
 signals.all.game_start_signal.connect(_execute)
