@@ -40,5 +40,5 @@ class Editor(SplittableCodeEditTabWidget):
 
     def get_code(self):
         if self.current_widget():
-            return self.current_widget().toPlainText()
-        return ""
+            return (self.current_widget().toPlainText(),self.current_widget().file.path)
+        return ("","")

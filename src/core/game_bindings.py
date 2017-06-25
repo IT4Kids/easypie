@@ -3,6 +3,7 @@ import io
 import threading
 import traceback
 import sys
+import os
 
 import pygame
 import time
@@ -121,7 +122,10 @@ def run(loop):
     _game_thread.start()
 
 
-def _setup_environment():
+def _setup_environment(file_path=None):
+    if file_path:
+        os.chdir(os.path.dirname(file_path))
+
     global key_callbacks, key_queue, pressed_keys, background_image
 
     background_image = None
@@ -173,7 +177,7 @@ def _execute(code):
     try:
         _console_clear()
         _console_print(">>> Starting program.")
-        exec(code, _setup_environment())  # Copying globals to run in current namespace but don't change anything.
+        exec(code[0], _setup_environment(code[1]))  # Copying globals to run in current namespace but don't change anything.
     except Exception:
         _print_exception_to_console()
     finally:

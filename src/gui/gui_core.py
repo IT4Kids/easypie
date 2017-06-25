@@ -206,7 +206,7 @@ class MainWindow(QtWidgets.QMainWindow):
         filemenu.addSeparator()
 
         examples_menu = filemenu.addMenu("Examples")
-        examples_menu.addAction("Maus Zum Käse",lambda: self.centralWidget().tabbed_editors.open_document("examples/MausZumKaese/maus_zum_kaese.py"))
+        examples_menu.addAction("Maus Zum Käse",lambda: self.centralWidget().tabbed_editors.open_document("../examples/MausZumKaese/maus_zum_kaese.py"))
 
 
         self.show()

@@ -12,7 +12,7 @@ class Kaese(pygame.sprite.Sprite):
 
     def __init__(self):
         super().__init__()
-        self.image = pygame.image.load("/home/axxessio/workspace/Work/IT4Kids/easypie/examples/MausZumKaese/Käse.png")
+        self.image = pygame.image.load("Käse.png")
         self.image = pygame.transform.scale2x(self.image)
         self.rect = self.image.get_rect()
         self.rect.x = 1300
@@ -52,7 +52,7 @@ class Maus(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center=loc)
 
     def reset(self):
-        self.original_image = pygame.transform.scale2x(pygame.image.load("./examples/MausZumKaese/Maus.bmp"))
+        self.original_image = pygame.transform.scale2x(pygame.image.load("Maus.bmp"))
         self.image = self.original_image.copy()
         self.rect = self.image.get_rect()
         self.rect.x, self.rect.y = 50,700
@@ -109,7 +109,7 @@ k = Kaese()
 kaese_group = pygame.sprite.Group()
 kaese_group.add(k)
 
-font = pygame.font.Font("gui/res/freesansbold.ttf", 220)
+font = pygame.font.Font(None, 220)
 def game_loop(anim):
     global won,lost
     if not won and not lost:
@@ -141,7 +141,7 @@ def game_loop(anim):
 
 def run(anim):
     global  won,lost
-    pygame.set_background("./examples/MausZumKaese/background.bmp")
+    pygame.set_background("background.bmp")
     maus.reset()
     won, lost = False, False
     pygame.run(lambda: game_loop(anim))

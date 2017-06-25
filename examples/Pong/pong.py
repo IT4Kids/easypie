@@ -90,7 +90,7 @@ class Player(pygame.sprite.Sprite):
 p1_score = 0
 p2_score = 0
 screen = pygame.screen
-font = pygame.font.Font("src/gui/res/freesansbold.ttf", 36)
+font = pygame.font.Font(None, 36)
 ball = Ball()
 p1 = Player(50)
 p2 = Player(pygame.WIDTH - 65)
