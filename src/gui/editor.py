@@ -14,9 +14,10 @@ class MyCodeEdit(PyCodeEdit):
     def __init__(self, parent=None):
 
 
-        super().__init__(parent=parent,color_scheme='monokai', autostart_backend=not getattr(sys,'frozen',False))
+        super().__init__(parent=parent,color_scheme='monokai')
         self.modes.remove(PEP8CheckerMode)
-        if not self.backend.running:
+        if not getattr(sys,'frozen',False):
+            self.backend.stop()
             self.modes.remove(CodeCompletionMode)
             self.modes.remove(CalltipsMode)
             self.panels.remove(QuickDocPanel)
