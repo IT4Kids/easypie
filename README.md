@@ -1,6 +1,6 @@
 # Easypie
 
-Easypie is a small IDE for writing games with Pygame.
+Easypie is a small IDE for writing games with Pygame.  
 It aims to implement real-time feedback on the current scene and
 only needs 2 buttons. Start, and Stop. Simple is the new black.
 
@@ -12,7 +12,7 @@ Check the screenshots below to get a feel for the IDE.
 </span>
 ## Getting Started
 
-This guide will help you to get Easypie up and runnning quickly.
+This guide will help you to get Easypie up and runnning quickly.  
 Simply head over to our [Releases page](https://github.com/FynnMazurkiewicz/easypie/releases) and
 download the most recent version for your operating system!
 
@@ -38,4 +38,4 @@ pip install -r requirements.txt
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
