@@ -178,10 +178,12 @@ def _execute(code):
     try:
         _console_clear()
         _console_print(">>> Starting program.")
+        sys.path.append(os.path.dirname(code[1]))
         exec(code[0], _setup_environment(code[1]))  # Copying globals to run in current namespace but don't change anything.
     except Exception:
         _print_exception_to_console()
     finally:
+        sys.path.remove(os.path.dirname(code[1]))
         os.chdir(old_path)
         signals.all.game_stop_signal.emit()
 
