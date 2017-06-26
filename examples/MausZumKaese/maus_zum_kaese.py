@@ -1,5 +1,5 @@
 # coding=utf-8
-from examples.MausZumKaese.maus_zum_kaese_main import maus, run, Animation
+from maus_zum_kaese_main import maus, run, Animation
 
 animation = Animation()
 
