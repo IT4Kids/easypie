@@ -204,12 +204,6 @@ class MainWindow(QtWidgets.QMainWindow):
         filemenu.addAction(save_as_action)
         self.addAction(save_as_action)
 
-        filemenu.addSeparator()
-
-        examples_menu = filemenu.addMenu("Examples")
-        examples_menu.addAction("Maus Zum Käse",lambda: self.centralWidget().tabbed_editors.open_document("../examples/MausZumKaese/maus_zum_kaese.py"))
-
-
         self.show()
 
     def loop(self):
