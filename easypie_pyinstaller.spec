@@ -45,5 +45,4 @@ exe = EXE(pyz,
           debug=False,
           strip=False,
           upx=True,
-          console=False,
-          icon='src/gui/res/icon.png')
+          console=False)
