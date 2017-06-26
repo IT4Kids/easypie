@@ -1,6 +1,5 @@
 appdirs==1.4.3
 coverage==4.4.1
-cx-Freeze==5.0.2
 docutils==0.13.1
 future==0.16.0
 jedi==0.9.0
