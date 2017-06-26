@@ -6,15 +6,16 @@ from pygame import *
 import pygame
 import PyQt5.QtCore as Core
 
+from common import res
 from core.game_bindings import on_key, screen, run, set_background
 
 pygame.init()
 
 real_font = pygame.font.Font
-cached_path = os.path.abspath('gui/res/freesansbold.ttf')
+abs_path = os.path.abspath(res('gui/res/freesansbold.ttf'))
 def font_workaround(path,size):
     if path is None:
-        path = cached_path
+        path = abs_path
     return real_font(path,size)
 
 pygame.font.Font = font_workaround

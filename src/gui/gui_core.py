@@ -10,6 +10,7 @@ import core.game_bindings as bindings
 import gui.debug_console
 import gui.editor
 import signals
+from common import res
 
 main_window = None
 app = None
@@ -151,22 +152,22 @@ class MainWindow(QtWidgets.QMainWindow):
         #General Setup
         self.setCentralWidget(MainWidget(pygame_canvas,parent=self))
         self.setMinimumSize(1024, 768)
-        self.setWindowIcon(QtGui.QIcon("gui/res/icon.png"))
+        self.setWindowIcon(QtGui.QIcon(res("gui/res/icon.png")))
         self.setWindowTitle("It4Kids: EasyPie")
-        self.setStyleSheet(open("gui/style.css").read()) #Todo make configurable
+        self.setStyleSheet(open(res("gui/style.css")).read()) #Todo make configurable
 
         #Setup Toolbar
         toolbar = QtWidgets.QToolBar()
         toolbar.setIconSize(QtCore.QSize(40, 40))
 
-        play_action = toolbar.addAction(QtGui.QIcon('gui/res/play.png'),
+        play_action = toolbar.addAction(QtGui.QIcon(res('gui/res/play.png')),
                                         "Play (F5)",
                                         lambda: signals.all.game_start_signal.emit(
                                             self.centralWidget().tabbed_editors.get_code()))
         play_action.setShortcut("f5")
         play_action.setShortcutContext(Qt.ApplicationShortcut)
 
-        stop_action = toolbar.addAction(QtGui.QIcon('gui/res/stop.png'),
+        stop_action = toolbar.addAction(QtGui.QIcon(res('gui/res/stop.png')),
                                         "Stop (F6)",
                                         lambda: signals.all.game_stop_signal.emit())
         stop_action.setShortcut("f6")
