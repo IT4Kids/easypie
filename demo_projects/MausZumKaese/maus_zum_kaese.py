@@ -1,5 +1,5 @@
 # coding=utf-8
-from maus_zum_kaese_main import maus, run, Animation
+from utils import maus, run, Animation
 
 animation = Animation()
 
