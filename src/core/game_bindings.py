@@ -181,12 +181,13 @@ def _print_exception_to_console():
 
 def _execute(code):
     old_path = os.getcwd()
+
     if game_thread.is_running:
         game_thread.stop()
         game_thread.join()
     try:
         _console_clear()
-        _console_print(">>> Starting program.")
+        _console_print(">>> Running {path}".format(path=(code[1] or "UnsavedDocument.py")))
         sys.path.append(os.path.dirname(code[1]))
         exec(code[0],
              _setup_environment(code[1]))  # Copying globals to run in current namespace but don't change anything.
