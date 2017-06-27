@@ -26,7 +26,7 @@ in $PATH.
 
 Now, clone or [download this repository](https://github.com/FynnMazurkiewicz/easypie/archive/master.zip) and extract it
 to any directory.  
-After you installed all dependencies (see below), you may run `python src/easypie.py`.
+After you installed all dependencies (see below), you may run `cd src; python easypie.py`.
 
 ### Prerequisites
 
