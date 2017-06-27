@@ -202,4 +202,4 @@ signals.all.game_start_signal.connect(_execute)
 signals.all.game_stop_signal.connect(game_thread.stop)
 import core.pygame_extended #Has sideeffects
 
-sys.modules['pygame'] = sys.modules['QtCore.pygame_extended']
+sys.modules['pygame'] = sys.modules['core.pygame_extended']
