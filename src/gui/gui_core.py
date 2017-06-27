@@ -178,31 +178,41 @@ class MainWindow(QtWidgets.QMainWindow):
 
         #Setup Menubar
         menubar = self.menuBar()
-        filemenu = menubar.addMenu("&File") #type: QtWidgets.QMenu
+        file_menu = menubar.addMenu("&File") #type: QtWidgets.QMenu
 
         new_action = QtWidgets.QAction("&New...",self)
         new_action.setShortcuts(QtGui.QKeySequence.New)
         new_action.triggered.connect(signals.all.new_signal.emit)
-        filemenu.addAction(new_action)
+        file_menu.addAction(new_action)
         self.addAction(new_action)
 
         open_action = QtWidgets.QAction("&Open...", self)
         open_action.setShortcuts(QtGui.QKeySequence.Open)
         open_action.triggered.connect(self.load_project)
-        filemenu.addAction(open_action)
+        file_menu.addAction(open_action)
         self.addAction(open_action)
 
         save_action = QtWidgets.QAction("&Save...", self)
         save_action.setShortcuts(QtGui.QKeySequence.Save)
         save_action.triggered.connect(signals.all.save_signal.emit)
-        filemenu.addAction(save_action)
+        file_menu.addAction(save_action)
         self.addAction(save_action)
 
         save_as_action = QtWidgets.QAction("&Save as...", self)
         save_as_action.setShortcuts(QtGui.QKeySequence.SaveAs)
         save_as_action.triggered.connect(signals.all.save_as_signal.emit)
-        filemenu.addAction(save_as_action)
+        file_menu.addAction(save_as_action)
         self.addAction(save_as_action)
+
+        layout_menu = menubar.addMenu("&Layout") #type: QtWidgets.QMenu
+
+        toggle_stage = QtWidgets.QAction("Hide Stage")
+        toggle_stage.setCheckable(True)
+        toggle_stage.triggered.connect(lambda: self.centralWidget().stage.canvas.setVisible(not toggle_stage.isChecked()))
+        toggle_stage.setShortcuts(QtGui.QKeySequence("CTRL+H"))
+
+        layout_menu.addAction(toggle_stage)
+        self.addAction(toggle_stage)
 
         self.show()
 
