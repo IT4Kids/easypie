@@ -12,6 +12,7 @@ import core.constants as constants
 import gui.gui_core
 import signals
 
+
 class GameThread(threading.Thread):
     def __init__(self, loop=None):
         super().__init__()
@@ -55,13 +56,13 @@ class GameThread(threading.Thread):
 
                 screen.fill((0, 0, 0))
                 if background_image:
-                    screen.blit(background_image,(0,0))
+                    screen.blit(background_image, (0, 0))
                 self.user_loop()
                 gui.gui_core.loop()
 
             except Exception as e:
                 traceback.print_exc()
-                print("Exception in GameThread",e)
+                print("Exception in GameThread", e)
                 _print_exception_to_console()
                 signals.all.game_stop_signal.emit()
                 self.stop()
@@ -71,7 +72,8 @@ class GameThread(threading.Thread):
     def stop(self):
         self.stop_flag_set = True
 
-_game_thread = GameThread()
+
+game_thread = GameThread()
 
 background_image = None
 screen = pygame.Surface(constants.SCREEN_SIZE)
@@ -81,6 +83,7 @@ key_callbacks = {
 }
 key_queue = []
 pressed_keys = []
+
 
 def on_key(key_constant, cb, modifiers=None, method=constants.KEYDOWN):
     """
@@ -113,13 +116,14 @@ def on_key(key_constant, cb, modifiers=None, method=constants.KEYDOWN):
     key_callbacks[method][key_constant] = cb_dict
     print("Keycallback: ", method, key_constant, mod_mask)
 
+
 def run(loop):
-    global _game_thread
-    if _game_thread:
-        _game_thread.stop()
-    _game_thread = GameThread()
-    _game_thread.set_loop(loop)
-    _game_thread.start()
+    global game_thread
+    if game_thread:
+        game_thread.stop()
+    game_thread = GameThread()
+    game_thread.set_loop(loop)
+    game_thread.start()
 
 
 def _setup_environment(file_path=None):
@@ -140,27 +144,32 @@ def _setup_environment(file_path=None):
     user_glob["print"] = _console_print
     return user_glob
 
+
 def set_background(file_path=None):
     global background_image
     if file_path:
         if not file_path.endswith(".bmp"):
             _console_err("Warning: Loading background: You should always use .bmp-formatted images.")
         background_image = pygame.image.load(file_path)
-        background_image = pygame.transform.scale(background_image,constants.SCREEN_SIZE)
+        background_image = pygame.transform.scale(background_image, constants.SCREEN_SIZE)
     else:
         background_image = None
+
 
 def _console_print(*args, sep=' ', end='\n'):
     string = sep.join([str(arg) for arg in args]) + end
     gui.gui_core.main_window.centralWidget().stage.console.log_signal.emit(string)
 
+
 def _console_err(*args, sep=' ', end='\n'):
     string = sep.join([str(arg) for arg in args]) + end
     gui.gui_core.main_window.centralWidget().stage.console.error_signal.emit(string)
 
+
 def _console_clear():
-    gui.gui_core.main_window.centralWidget().stage.console.clear()#Change this to a signal later one, fix bug
-                                                                            # with signal in incorrect order
+    gui.gui_core.main_window.centralWidget().stage.console.clear()  # Change this to a signal later one, fix bug
+    # with signal in incorrect order
+
 
 def _print_exception_to_console():
     file = io.StringIO()
@@ -172,14 +181,15 @@ def _print_exception_to_console():
 
 def _execute(code):
     old_path = os.getcwd()
-    if _game_thread.is_running:
-        _game_thread.stop()
-        _game_thread.join()
+    if game_thread.is_running:
+        game_thread.stop()
+        game_thread.join()
     try:
         _console_clear()
         _console_print(">>> Starting program.")
         sys.path.append(os.path.dirname(code[1]))
-        exec(code[0], _setup_environment(code[1]))  # Copying globals to run in current namespace but don't change anything.
+        exec(code[0],
+             _setup_environment(code[1]))  # Copying globals to run in current namespace but don't change anything.
     except Exception:
         _print_exception_to_console()
     finally:
@@ -187,7 +197,9 @@ def _execute(code):
         os.chdir(old_path)
         signals.all.game_stop_signal.emit()
 
+
 signals.all.game_start_signal.connect(_execute)
-signals.all.game_stop_signal.connect(_game_thread.stop)
-import core.pygame_extended
-sys.modules['pygame'] = sys.modules['core.pygame_extended']
+signals.all.game_stop_signal.connect(game_thread.stop)
+import core.pygame_extended #Has sideeffects
+
+sys.modules['pygame'] = sys.modules['QtCore.pygame_extended']

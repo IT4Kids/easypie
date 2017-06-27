@@ -125,7 +125,7 @@ class QStage(QtWidgets.QWidget):
         self.layout().addWidget(self.console, 50)
 
     def pause(self):
-        bindings._game_thread.paused = not bindings._game_thread.paused
+        bindings.game_thread.paused = not bindings.game_thread.paused
 
 
 class MainWidget(QtWidgets.QWidget):
@@ -222,10 +222,13 @@ class MainWindow(QtWidgets.QMainWindow):
     def closeEvent(self, event):
         signals.all.close_signal.emit()
         self.centralWidget().tabbed_editors.closeEvent(event)
-        bindings._game_thread.stop()
+        bindings.game_thread.stop()
 
     def load_project(self):
-        file_path = QtWidgets.QFileDialog.getOpenFileName(self,"Open Project",".","Python (*.py)")
+        file_path = QtWidgets.QFileDialog.getOpenFileName(parent=self,
+                                                          caption="Open Project",
+                                                          directory=".",
+                                                          filter="Python (*.py)")
         if file_path[0]:
             self.centralWidget().tabbed_editors.open_document(file_path[0])
 

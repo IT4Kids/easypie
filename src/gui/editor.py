@@ -12,6 +12,7 @@ from pyqode.python.widgets import PyCodeEditBase
 
 import signals
 
+
 class MyCodeEdit(PyCodeEditBase):
     """
     Extends PyCodeEditBase with a set of hardcoded modes and panels specifics
@@ -26,12 +27,12 @@ class MyCodeEdit(PyCodeEditBase):
                  interpreter=sys.executable, args=None,
                  create_default_actions=True, color_scheme='monokai',
                  reuse_backend=False):
-        super().__init__(
+        super(PyCodeEditBase, self).__init__(
             parent=parent, create_default_actions=create_default_actions)
 
         if not getattr(sys, 'frozen', False):
             self.backend.start(server_script, interpreter, args,
-                           reuse=reuse_backend)
+                               reuse=reuse_backend)
 
         self.setLineWrapMode(self.NoWrap)
         self.setWindowTitle("pyQode - Python Editor")
@@ -90,10 +91,8 @@ class MyCodeEdit(PyCodeEditBase):
         return 'PyCodeEdit(path=%r)' % self.file.path
 
 
-
 class Editor(SplittableCodeEditTabWidget):
-
-    def __init__(self,parent=None):
+    def __init__(self, parent=None):
         super().__init__(parent)
         self.register_code_edit(MyCodeEdit)
         signals.all.save_as_signal.connect(self.save_current_as)
@@ -109,5 +108,5 @@ class Editor(SplittableCodeEditTabWidget):
 
     def get_code(self):
         if self.current_widget():
-            return (self.current_widget().toPlainText(),self.current_widget().file.path)
-        return ("","")
+            return self.current_widget().toPlainText(), self.current_widget().file.path
+        return "", ""

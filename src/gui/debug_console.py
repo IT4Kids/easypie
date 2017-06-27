@@ -4,6 +4,7 @@ import PyQt5.QtGui as QtGui
 import io
 from pyqode.qt import QtCore
 
+
 class QDbgConsole(QtWidgets.QTextEdit):
     """
     A simple QTextEdit, with a few pre-set attributes and a file-like
@@ -30,8 +31,6 @@ class QDbgConsole(QtWidgets.QTextEdit):
         # Autoscroll
         self.moveCursor(QtGui.QTextCursor.End)
         self._buffer.write(msg)
-
-
 
     def __getattr__(self, attr):
         """
