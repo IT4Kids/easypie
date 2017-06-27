@@ -13,10 +13,10 @@ Simple is the new black.
 
 This guide will help you to get Easypie up and runnning quickly.  
 Simply head over to our [Releases page](https://github.com/FynnMazurkiewicz/easypie/releases) and
-download the most recent version for your operating system!
+download the most recent version for your operating system.
+Easypie runs without any dependencies.
 
 Extract the file `easypie_os_x_x_x.zip` and run Easypie.
-That's it!
 
 
 ## Developers
