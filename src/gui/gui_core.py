@@ -209,7 +209,7 @@ class MainWindow(QtWidgets.QMainWindow):
         toggle_stage = QtWidgets.QAction("Hide Stage")
         toggle_stage.setCheckable(True)
         toggle_stage.triggered.connect(lambda: self.centralWidget().stage.canvas.setVisible(not toggle_stage.isChecked()))
-        toggle_stage.setShortcuts(QtGui.QKeySequence("CTRL+H"))
+        toggle_stage.setShortcuts(QtGui.QKeySequence.Bold)
 
         layout_menu.addAction(toggle_stage)
         self.addAction(toggle_stage)
