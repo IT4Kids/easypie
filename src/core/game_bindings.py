@@ -202,7 +202,6 @@ def _execute(code):
         finally:
             sys.path.remove(os.path.dirname(code[1]))
             os.chdir(old_path)
-            signals.all.game_stop_signal.emit()
 
     threading.Thread(target=run_with_exception).start()
 
