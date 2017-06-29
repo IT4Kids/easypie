@@ -116,6 +116,8 @@ def on_key(key_constant, cb, modifiers=None, method=constants.KEYDOWN):
     key_callbacks[method][key_constant] = cb_dict
     print("Keycallback: ", method, key_constant, mod_mask)
 
+def _console_input(prompt=">>> "):
+    return gui.gui_core.get_window().centralWidget().stage.console.get_input(prompt)
 
 def run(loop):
     global game_thread
@@ -142,6 +144,7 @@ def _setup_environment(file_path=None):
     pressed_keys = []
     user_glob = {}
     user_glob["print"] = _console_print
+    user_glob["input"] = _console_input
     return user_glob
 
 
