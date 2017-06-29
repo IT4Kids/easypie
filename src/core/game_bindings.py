@@ -183,23 +183,30 @@ def _print_exception_to_console():
 
 
 def _execute(code):
+
     old_path = os.getcwd()
 
     if game_thread.is_running:
         game_thread.stop()
         game_thread.join()
-    try:
-        _console_clear()
-        _console_print(">>> Running {path}".format(path=(code[1] or "UnsavedDocument.py")))
-        sys.path.append(os.path.dirname(code[1]))
-        exec(code[0],
-             _setup_environment(code[1]))  # Copying globals to run in current namespace but don't change anything.
-    except Exception:
-        _print_exception_to_console()
-    finally:
-        sys.path.remove(os.path.dirname(code[1]))
-        os.chdir(old_path)
-        signals.all.game_stop_signal.emit()
+    _console_clear()
+    _console_print(">>> Running {path}".format(path=(code[1] or "UnsavedDocument.py")))
+
+    def run_with_exception():
+        try:
+            sys.path.append(os.path.dirname(code[1]))
+            exec(code[0],
+                 _setup_environment(code[1]))  # Copying globals to run in current namespace but don't change anything.
+        except Exception:
+            _print_exception_to_console()
+        finally:
+            sys.path.remove(os.path.dirname(code[1]))
+            os.chdir(old_path)
+            signals.all.game_stop_signal.emit()
+
+    threading.Thread(target=run_with_exception).start()
+
+
 
 
 signals.all.game_start_signal.connect(_execute)
