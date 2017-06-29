@@ -70,7 +70,6 @@ class MyCodeEdit(PyCodeEditBase):
 
         self.modes.append(pymodes.PyAutoIndentMode())
         self.modes.append(pymodes.PyFlakesChecker())
-        self.modes.append(pymodes.PEP8CheckerMode())
         self.modes.append(pymodes.PyIndenterMode())
         self.modes.append(pymodes.GoToAssignmentsMode())
         self.modes.append(pymodes.CommentsMode())
