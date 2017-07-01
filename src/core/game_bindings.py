@@ -20,6 +20,7 @@ class GameThread(threading.Thread):
         self.stop_flag_set = False
         self.pause_flag_set = False
         self.is_running = False
+        self.daemon = True
 
     def set_loop(self, loop):
         self.user_loop = loop
@@ -190,10 +191,12 @@ def _execute(code):
         game_thread.stop()
         game_thread.join()
     _console_clear()
-    _console_print(">>> Running {path}".format(path=(code[1] or "UnsavedDocument.py")))
+    _console_print("Running {path}".format(path=(code[1] or "UnsavedDocument.py")))
 
     def run_with_exception():
         try:
+            if game_thread.is_running:
+                game_thread.stop()
             sys.path.append(os.path.dirname(code[1]))
             exec(code[0],
                  _setup_environment(code[1]))  # Copying globals to run in current namespace but don't change anything.
@@ -202,8 +205,9 @@ def _execute(code):
         finally:
             sys.path.remove(os.path.dirname(code[1]))
             os.chdir(old_path)
-
-    threading.Thread(target=run_with_exception).start()
+            if not game_thread.is_running:
+                signals.all.game_stop_signal.emit()
+    threading.Thread(target=run_with_exception,daemon=True).start()
 
 
 
