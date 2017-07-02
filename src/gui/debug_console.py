@@ -25,7 +25,6 @@ class QDbgConsole(QtWidgets.QTextEdit):
             self.setMinimumSize(*size)
         self.setReadOnly(True)
         self.getting_input = False
-        self.input_buffer = ""
         self.input_cursor_pos = None
         self.log_signal.connect(self.write)
         self.error_signal.connect(lambda msg: self.write(msg, text_color=QtGui.QColor(139, 0, 0)))
@@ -40,27 +39,27 @@ class QDbgConsole(QtWidgets.QTextEdit):
 
     def get_input(self, prompt=""):
         self.getting_input = True
-        self.setReadOnly(False)
         self.log_signal.emit(prompt)
-        self.input_cursor_pos = self.textCursor().position()
+        self.moveCursor(QtGui.QTextCursor.End)
+        self.setReadOnly(False)
+        self.input_cursor_pos = self.textCursor().position()+len(prompt)
         while self.getting_input:
             time.sleep(0.1)
-        self.setReadOnly(True)
-        self.getting_input = False
-        ret = self.input_buffer
-        self.input_buffer = ""
+        ret = self.toPlainText()[self.input_cursor_pos:].strip()
         return ret
 
 
     def keyPressEvent(self, event):
         if self.getting_input:
-            self.moveCursor(QtGui.QTextCursor.End)
-            self.input_buffer += event.text()
             if event.key() == QtCore.Qt.Key_Return:
+                self.setReadOnly(True)
                 self.getting_input = False
-        else:
-            self.moveCursor(QtGui.QTextCursor.End)
-        super().keyPressEvent(event)
+
+            if event.key() in [QtCore.Qt.Key_Delete, QtCore.Qt.Key_Backspace]:
+                if self.textCursor().position() <= self.input_cursor_pos:
+                    return
+            super().keyPressEvent(event)
+        self.moveCursor(QtGui.QTextCursor.End)
 
 
     def __getattr__(self, attr):
