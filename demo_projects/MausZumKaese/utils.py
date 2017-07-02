@@ -24,9 +24,9 @@ def chunkify(value,chunksize=10):
     sign = value/abs_value
     chunks = []
     while abs_value != 0:
-        if abs(abs_value - chunksize) >= 0:
+        if abs_value - chunksize >= 0:
             chunks.append(chunksize*sign)
-            abs_value -= 10
+            abs_value -= chunksize
         else:
             chunks.append(abs_value*sign)
             break
