@@ -42,9 +42,13 @@ class QCanvas(QtWidgets.QFrame):
         self.addAction(self.toggle_fs_action)
 
         self.exit_focus_action = QtWidgets.QAction("Exit Focus")
-        self.exit_focus_action.triggered.connect(lambda: self.toggle_fullscreen(True))
+        self.exit_focus_action.triggered.connect(self.exit_focus)
         self.exit_focus_action.setShortcut("esc")
         self.addAction(self.exit_focus_action)
+
+    def exit_focus(self):
+        self.toggle_fullscreen(True)
+        self.setCursor(Qt.PointingHandCursor)
 
     def toggle_fullscreen(self,state=None):
         state = state if state else self.isWindow()
@@ -67,6 +71,7 @@ class QCanvas(QtWidgets.QFrame):
     def stop(self):
         self.setStyleSheet("background-color: rgb(0,0,0); border: 5px solid #c43c27;")
         self.buffer.fill((0,0,0))
+        self.setCursor(QtCore.Qt.PointingHandCursor)
         self.painting_enabled = False
 
     def qt_to_sdl_press(self, key_code):
