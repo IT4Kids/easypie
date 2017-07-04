@@ -1,4 +1,5 @@
 # coding=utf-8
+import functools
 import sys
 
 from pyqode.core import modes, panels, api
@@ -57,6 +58,8 @@ class MyCodeEdit(PyCodeEditBase):
         self.modes.append(modes.CaretLineHighlighterMode())
         self.modes.append(modes.FileWatcherMode())
         self.modes.append(modes.RightMarginMode())
+        self.zoom_in = functools.partial(self.zoom_in,increment=1) #Fix a bug in pyqode (#16 in github:easypie)
+        self.zoom_out = functools.partial(self.zoom_in,increment=-1)
         self.modes.append(modes.ZoomMode())
         self.modes.append(modes.SymbolMatcherMode())
         self.modes.append(modes.CodeCompletionMode())
