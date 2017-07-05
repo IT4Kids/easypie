@@ -45,6 +45,7 @@ class QDbgConsole(QtWidgets.QTextEdit):
         self.input_cursor_pos = self.textCursor().position()+len(prompt)
         while self.getting_input:
             time.sleep(0.1)
+        self.moveCursor(QtGui.QTextCursor.End)
         ret = self.toPlainText()[self.input_cursor_pos:].strip()
         return ret
 
@@ -53,7 +54,9 @@ class QDbgConsole(QtWidgets.QTextEdit):
         if self.getting_input:
             if event.key() == QtCore.Qt.Key_Return:
                 self.setReadOnly(True)
+                self.write("\n")
                 self.getting_input = False
+                return
 
             if event.key() in [QtCore.Qt.Key_Delete, QtCore.Qt.Key_Backspace]:
                 if self.textCursor().position() <= self.input_cursor_pos:
