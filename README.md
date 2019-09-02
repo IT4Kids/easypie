@@ -15,6 +15,8 @@ Easypie runs without any dependencies.
 
 Extract the file `easypie_os_x_x_x.zip` and run Easypie by double-clicking.
 
+## Demo Projects
+You can find existing demo projects in `./demo_projects`, just load them via the GUI.
 
 ## Developers
 
