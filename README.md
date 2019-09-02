@@ -23,13 +23,13 @@ Make sure you have Python 3.5 or later installed and in $PATH.
 
 Now, clone or [download this repository](https://github.com/FynnMazurkiewicz/easypie/archive/master.zip) and extract it
 to any directory.  
-After you installed all dependencies (see below), you may run `cd src; python easypie.py`.
+After you installed all dependencies (see below), you may run `cd src; python3 easypie.py`.
 
 ### Prerequisites
 
 To install all dependencies, open a console in the new directory and do:
 ```
-pip install -r src/requirements.txt
+pip3 install -r src/requirements.txt
 ```
 
 ## License
