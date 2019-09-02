@@ -37,4 +37,4 @@ pip install -r src/requirements.txt
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
+See the [LICENSE.md](LICENSE.md) file for details.
