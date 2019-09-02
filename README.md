@@ -1,9 +1,6 @@
 # Easypie
 
-Easypie is a small IDE for writing games with Pygame.  
-It aims to implement real-time feedback on the current scene.  
-It only needs 2 buttons.  
-Simple is the new black.
+Easypie is a small IDE for writing games with Pygame. It aims to implement real-time feedback on the current scene. It only needs two buttons.
 
 <span><img src="https://github.com/FynnMazurkiewicz/easypie/blob/master/screenshots/MZK.png" width="336" height="189">
 <img src="https://github.com/FynnMazurkiewicz/easypie/blob/master/screenshots/fullscreen_pong.png" width="336" height="189">
